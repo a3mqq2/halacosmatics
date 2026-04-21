@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class MarketerTransaction extends Model
+{
+    protected $fillable = [
+        'marketer_id',
+        'user_id',
+        'type',
+        'recipient_name',
+        'description',
+        'amount',
+        'date',
+        'balance_after',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'amount'        => 'decimal:2',
+            'balance_after' => 'decimal:2',
+            'date'          => 'date',
+        ];
+    }
+
+    public function marketer(): BelongsTo
+    {
+        return $this->belongsTo(Marketer::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}

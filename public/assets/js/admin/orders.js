@@ -1,0 +1,66 @@
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+        if (e.defaultPrevented) return;
+        const btn = form.querySelector('[type="submit"]');
+        if (! btn) return;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> جاري...';
+    });
+});
+
+let tsCity = null;
+let tsSubCity = null;
+
+function initDispatchSelects() {
+    if (tsCity) return;
+
+    tsCity = new TomSelect('#ms-city', {
+        placeholder: '— اختر المدينة —',
+        allowEmptyOption: true,
+        onChange(cityId) {
+            const opt = document.querySelector(`#ms-city option[value="${cityId}"]`);
+            const subCities = opt ? JSON.parse(opt.dataset.subcities || '[]') : [];
+
+            tsSubCity.clear();
+            tsSubCity.clearOptions();
+            tsSubCity.addOption({ value: '', text: '— اختر المنطقة —' });
+            subCities.forEach(s => tsSubCity.addOption({ value: s.id, text: s.name }));
+            tsSubCity.setValue('');
+
+            const wrap = document.getElementById('ms-subcity').closest('.col-12');
+            wrap.style.display = subCities.length ? '' : 'none';
+        },
+    });
+
+    tsSubCity = new TomSelect('#ms-subcity', {
+        placeholder: '— اختر المنطقة —',
+        allowEmptyOption: true,
+    });
+
+    tsCity.trigger('change', tsCity.getValue());
+}
+
+function selectDispatch(type) {
+    document.querySelectorAll('.dispatch-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.dispatch-form').forEach(f => f.classList.add('d-none'));
+    document.getElementById('card-' + type).classList.add('selected');
+    document.getElementById('form-' + type).classList.remove('d-none');
+
+    if (type === 'mosafir') {
+        setTimeout(initDispatchSelects, 50);
+    }
+}
+
+function resetDispatch() {
+    document.querySelectorAll('.dispatch-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.dispatch-form').forEach(f => f.classList.add('d-none'));
+}
+
+function toggleFailNotes(value) {
+    const wrap  = document.getElementById('failNotesWrap');
+    const notes = document.getElementById('failNotes');
+    const show  = value === 'other';
+    wrap.style.display = show ? '' : 'none';
+    notes.required = show;
+    if (!show) notes.value = '';
+}

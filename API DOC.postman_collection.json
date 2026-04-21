@@ -1,0 +1,943 @@
+{
+  "info": {
+    "_postman_id": "b181d910-f50c-44ec-b301-502385966c64",
+    "name": "API DOC",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15423680",
+    "_collection_link": "https://go.postman.co/collection/15423680-b181d910-f50c-44ec-b301-502385966c64?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "salamalubna1@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "argadonia",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "متجر لتجربة الAPI فقط433333",
+                  "type": "text"
+                },
+                {
+                  "key": "owner_name",
+                  "value": "احمد3",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "ahm242@gm3ail.com3",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "0944662232",
+                  "type": "text"
+                },
+                {
+                  "key": "phone2",
+                  "value": "218944662914",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "طرابلس",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "0944662232",
+                  "type": "text"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "0944662232",
+                  "type": "text"
+                },
+                {
+                  "key": "branch_id",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/register",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Parcels",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "desc",
+                  "value": "صنة",
+                  "type": "text"
+                },
+                {
+                  "key": "customer_name",
+                  "value": "الشريف",
+                  "type": "text"
+                },
+                {
+                  "key": "qty",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "recipient_number",
+                  "value": "0925623235",
+                  "type": "text"
+                },
+                {
+                  "key": "product_price",
+                  "value": "5000",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "زاوية الدهماني",
+                  "type": "text"
+                },
+                {
+                  "key": "delivery_on",
+                  "value": "customer",
+                  "type": "text"
+                },
+                {
+                  "key": "to_city_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "is_payment_down",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/parcels/store",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "parcels",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Multi Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "desc",
+                  "value": "صنة",
+                  "type": "text"
+                },
+                {
+                  "key": "customer_name",
+                  "value": "الشريف",
+                  "type": "text"
+                },
+                {
+                  "key": "qty",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "recipient_number",
+                  "value": "0925623235",
+                  "type": "text"
+                },
+                {
+                  "key": "product_price",
+                  "value": "5000",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "زاوية الدهماني",
+                  "type": "text"
+                },
+                {
+                  "key": "delivery_on",
+                  "value": "customer",
+                  "type": "text"
+                },
+                {
+                  "key": "to_city_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/parcels/store",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "parcels",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "desc",
+                  "value": "Test3",
+                  "type": "text"
+                },
+                {
+                  "key": "customer_name",
+                  "value": "Customer name23",
+                  "type": "text"
+                },
+                {
+                  "key": "qty",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "recipient_number",
+                  "value": "0944662915",
+                  "type": "text"
+                },
+                {
+                  "key": "product_price",
+                  "value": "1200",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "test address",
+                  "type": "text"
+                },
+                {
+                  "key": "delivery_on",
+                  "value": "customer",
+                  "type": "text"
+                },
+                {
+                  "key": "from_city",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "to_city_id",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/parcels/105420/update",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "parcels",
+                "105420",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "desc",
+                  "value": "Test3",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "customer_name",
+                  "value": "Customer name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "qty",
+                  "value": "5",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "recipient_number",
+                  "value": "0944662915",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "product_price",
+                  "value": "1200",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "address",
+                  "value": "test address",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "delivery_on",
+                  "value": "customer",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "from_city",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "to_city_id",
+                  "value": "1",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/parcels/105419/destroy",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "parcels",
+                "105419",
+                "destroy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "desc",
+                  "value": "Test3",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "customer_name",
+                  "value": "Customer name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "qty",
+                  "value": "5",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "recipient_number",
+                  "value": "0944662915",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "product_price",
+                  "value": "1200",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "address",
+                  "value": "test address",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "delivery_on",
+                  "value": "customer",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "from_city",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "to_city_id",
+                  "value": "1",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/parcels/148101",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "parcels",
+                "148101"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Parcels",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/parcels",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "parcels"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Prices",
+      "item": [
+        {
+          "name": "index",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "87430|oTzeNaoFvScyWmyNwuLS1hFSEEw3BZ20joRaxeWQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://faris.com.ly/api/clientarea/prices",
+              "protocol": "https",
+              "host": [
+                "faris",
+                "com",
+                "ly"
+              ],
+              "path": [
+                "api",
+                "clientarea",
+                "prices"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Home",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/summary",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "summary"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/user",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Parcel Statuses",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/statuses",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "statuses"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Receipts",
+      "item": [
+        {
+          "name": "All Receipts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/receipts",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "receipts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Receipt",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/receipts/3483",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "receipts",
+                "3483"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Delivery Man Routes",
+      "item": [
+        {
+          "name": "summary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/delivery-man",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "delivery-man"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Parcels",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/delivery-man/parcels",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "delivery-man",
+                "parcels"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parcels list change statuses",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"parcels_ids\": [9487],\r\n  \"status\" : \"FinancialSettlementPending\",\r\n  \"notes\" : \"توصيل لعند باب الحوش\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/delivery-man/parcels/multi-change-status",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "delivery-man",
+                "parcels",
+                "multi-change-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "show statuses",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/delivery-man/statuses",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "delivery-man",
+                "statuses"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Warehouse",
+      "item": [
+        {
+          "name": "Products",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/products",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "87430|oTzeNaoFvScyWmyNwuLS1hFSEEw3BZ20joRaxeWQ",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": ""
+    }
+  ]
+}

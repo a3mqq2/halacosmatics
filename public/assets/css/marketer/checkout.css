@@ -1,0 +1,223 @@
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-wrap {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .checkout-wrap {
+        grid-template-columns: 1fr;
+    }
+}
+
+.checkout-form-card,
+.checkout-summary-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #f0ebe8;
+    padding: 1.5rem;
+}
+
+.section-label {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #4a2619;
+    margin-bottom: 1.25rem;
+    padding-bottom: .5rem;
+    border-bottom: 2px solid #f0ebe8;
+}
+
+.form-label {
+    font-size: .85rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: .35rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border-color: #e8e0dc;
+    font-size: .9rem;
+    padding: .55rem .85rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #4a2619;
+    box-shadow: 0 0 0 3px rgba(74, 38, 25, .1);
+}
+
+/* Summary */
+.checkout-items {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    margin-bottom: 1.25rem;
+}
+
+.checkout-item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .875rem;
+}
+
+.checkout-item-name {
+    flex: 1;
+    color: #333;
+}
+
+.checkout-item-qty {
+    color: #888;
+    font-size: .8rem;
+}
+
+.checkout-item-price {
+    font-weight: 600;
+    color: #4a2619;
+    white-space: nowrap;
+}
+
+.checkout-totals {
+    border-top: 1px solid #f0ebe8;
+    padding-top: 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.checkout-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .875rem;
+    color: #555;
+}
+
+.checkout-grand-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    padding-top: .5rem;
+    border-top: 2px solid #f0ebe8;
+    margin-top: .25rem;
+}
+
+.btn-place-order {
+    width: 100%;
+    padding: .75rem;
+    background: #4a2619;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: .75rem;
+    transition: background .2s;
+}
+
+.btn-place-order:hover {
+    background: #3a1d12;
+}
+
+.btn-back-cart {
+    display: block;
+    text-align: center;
+    font-size: .85rem;
+    color: #888;
+    text-decoration: none;
+}
+
+.btn-back-cart:hover {
+    color: #4a2619;
+}
+
+/* Tom Select overrides */
+.ts-wrapper.single .ts-control {
+    border-radius: 10px;
+    border: 1.5px solid #c8b8b0;
+    font-size: .9rem;
+    padding: .6rem .9rem;
+    background: #fff;
+    color: #1a1a1a;
+    box-shadow: none;
+}
+
+.ts-wrapper.single.focus .ts-control,
+.ts-wrapper.single:not(.disabled) .ts-control:hover {
+    border-color: #4a2619;
+    box-shadow: 0 0 0 3px rgba(74, 38, 25, .1);
+}
+
+.ts-dropdown {
+    border: 1.5px solid #c8b8b0;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    background: #fff;
+    overflow: hidden;
+}
+
+.ts-dropdown-content {
+    padding: .4rem;
+}
+
+.ts-dropdown .option {
+    border-radius: 8px;
+    padding: .55rem .75rem;
+    font-size: .875rem;
+    color: #333;
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.ts-dropdown .option:hover,
+.ts-dropdown .option.active {
+    background: #f5ede9;
+    color: #4a2619;
+}
+
+.ts-dropdown .option.selected {
+    background: #4a2619;
+    color: #fff;
+}
+
+.ts-dropdown-header {
+    padding: .5rem .75rem;
+    border-bottom: 1px solid #f0ebe8;
+}
+
+.ts-dropdown input.dropdown-input {
+    font-size: .875rem;
+    border: 1.5px solid #c8b8b0;
+    border-radius: 8px;
+    padding: .45rem .75rem;
+    width: 100%;
+    outline: none;
+    background: #fff;
+}
+
+.ts-dropdown input.dropdown-input:focus {
+    border-color: #4a2619;
+    box-shadow: 0 0 0 3px rgba(74, 38, 25, .08);
+}
+
+.no-results {
+    padding: .75rem;
+    color: #888;
+    font-size: .875rem;
+    text-align: center;
+}
