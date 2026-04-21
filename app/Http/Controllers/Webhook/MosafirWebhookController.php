@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MosafirWebhookController extends Controller
 {
@@ -45,6 +46,8 @@ class MosafirWebhookController extends Controller
 
     public function handle(Request $request): JsonResponse
     {
+        Log::info('mosafir_webhook', $request->all());
+
         $parcelId = $request->input('parcel_id');
         $status   = $request->input('status');
 
@@ -62,16 +65,28 @@ class MosafirWebhookController extends Controller
 
         if ($status === 'FinancialSettlementPending' && $order->status === 'with_agent') {
             $this->orderService->markDelivered($order);
+            $order->logs()->create([
+                'action'      => 'mosafir_update',
+                'description' => "تحديث المسافر — الحالة: {$label}",
+            ]);
             return response()->json(['ok' => true]);
         }
 
         if (in_array($status, self::RETURNING_STATUSES) && $order->status === 'with_agent') {
             $this->orderService->markFailedDelivery($order, new FailDeliveryData('other', "المسافر: {$label}"));
+            $order->logs()->create([
+                'action'      => 'mosafir_update',
+                'description' => "تحديث المسافر — الحالة: {$label}",
+            ]);
             return response()->json(['ok' => true]);
         }
 
         if ($status === 'ReturnedAndReceived' && $order->status === 'returning') {
             $this->orderService->markReturned($order);
+            $order->logs()->create([
+                'action'      => 'mosafir_update',
+                'description' => "تحديث المسافر — الحالة: {$label}",
+            ]);
             return response()->json(['ok' => true]);
         }
 
