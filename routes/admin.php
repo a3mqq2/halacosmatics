@@ -20,25 +20,25 @@ Route::middleware('auth')->group(function () {
         ->except(['show'])
         ->middleware('permission:users');
 
-    Route::middleware('permission:marketers.view')->group(function () {
-        Route::resource('marketers', MarketerController::class)->only(['index', 'show']);
-    });
     Route::middleware('permission:marketers.manage')->group(function () {
         Route::resource('marketers', MarketerController::class)->except(['index', 'show']);
         Route::patch('marketers/{marketer}/toggle',  [MarketerController::class, 'toggle'])->name('marketers.toggle');
         Route::patch('marketers/{marketer}/approve', [MarketerController::class, 'approve'])->name('marketers.approve');
         Route::patch('marketers/{marketer}/reject',  [MarketerController::class, 'reject'])->name('marketers.reject');
     });
+    Route::middleware('permission:marketers.view')->group(function () {
+        Route::resource('marketers', MarketerController::class)->only(['index', 'show']);
+    });
     Route::middleware('permission:marketers.finance')->group(function () {
         Route::post('marketers/{marketer}/transactions', [MarketerController::class, 'storeTransaction'])->name('marketers.transactions.store');
     });
 
-    Route::middleware('permission:products.view')->group(function () {
-        Route::resource('products', ProductController::class)->only(['index', 'show']);
-    });
     Route::middleware('permission:products.edit')->group(function () {
         Route::resource('products', ProductController::class)->except(['index', 'show']);
         Route::patch('products/{product}/toggle', [ProductController::class, 'toggle'])->name('products.toggle');
+    });
+    Route::middleware('permission:products.view')->group(function () {
+        Route::resource('products', ProductController::class)->only(['index', 'show']);
     });
     Route::middleware('permission:products.stock')->group(function () {
         Route::post('products/{product}/add',      [ProductController::class, 'addQuantity'])->name('products.add-quantity');
