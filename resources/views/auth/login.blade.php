@@ -262,6 +262,17 @@
                 color: var(--login-text-secondary);
             }
 
+            @media (max-width: 991px) {
+                .login-footer {
+                    position: static;
+                    padding: 20px 16px;
+                    margin-top: 8px;
+                }
+                .login-form-side {
+                    padding-bottom: 0 !important;
+                }
+            }
+
             /* ── Tabs ── */
             .auth-tabs {
                 display: flex;
@@ -380,18 +391,18 @@
 
                     {{-- ── Tabs ── --}}
                     <div class="auth-tabs">
-                        <button class="auth-tab {{ $errors->has('phone') || $errors->has('password') || !$errors->any() ? 'active' : '' }}"
+                        <button class="auth-tab {{ old('_form') !== 'register' ? 'active' : '' }}"
                                 onclick="switchTab('login')" id="tab-login" type="button">
                             تسجيل الدخول
                         </button>
-                        <button class="auth-tab {{ $errors->has('first_name') || $errors->has('phone') ? 'active' : '' }}"
+                        <button class="auth-tab {{ old('_form') === 'register' ? 'active' : '' }}"
                                 onclick="switchTab('register')" id="tab-register" type="button">
                             حساب مسوق جديد
                         </button>
                     </div>
 
                     {{-- ══ LOGIN PANE ══ --}}
-                    <div class="auth-pane {{ $errors->has('first_name') || $errors->has('phone') ? '' : 'active' }}" id="pane-login">
+                    <div class="auth-pane {{ old('_form') !== 'register' ? 'active' : '' }}" id="pane-login">
 
                         <div class="login-heading" style="margin-bottom:24px">
                             <h1>مرحباً بك</h1>
@@ -400,6 +411,7 @@
 
                         <form method="POST" action="{{ route('login') }}" id="loginForm">
                             @csrf
+                            <input type="hidden" name="_form" value="login">
                             <div class="form-group">
                                 <label for="userLogin">رقم الهاتف <span class="required">*</span></label>
                                 <div class="input-wrapper">
@@ -436,14 +448,14 @@
                     </div>
 
                     {{-- ══ REGISTER PANE ══ --}}
-                    <div class="auth-pane {{ $errors->has('first_name') || $errors->has('phone') ? 'active' : '' }}" id="pane-register">
+                    <div class="auth-pane {{ old('_form') === 'register' ? 'active' : '' }}" id="pane-register">
 
                         <div class="login-heading" style="margin-bottom:24px">
                             <h1>إنشاء حساب</h1>
                             <p>سجّل بياناتك للانضمام كمسوق</p>
                         </div>
 
-                        @if($errors->any() && ($errors->has('first_name') || $errors->has('phone')))
+                        @if($errors->any() && old('_form') === 'register')
                             <div style="background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:10px;padding:12px 16px;font-size:13px;margin-bottom:16px;">
                                 <ul style="margin:0;padding-right:16px">
                                     @foreach($errors->all() as $err)
@@ -456,6 +468,7 @@
                         <form method="POST" action="{{ route('marketers.register') }}"
                               enctype="multipart/form-data" id="registerForm">
                             @csrf
+                            <input type="hidden" name="_form" value="register">
 
                             {{-- Name row --}}
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
