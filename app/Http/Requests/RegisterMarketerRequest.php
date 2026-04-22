@@ -28,7 +28,7 @@ class RegisterMarketerRequest extends FormRequest
                     }
                 },
             ],
-            'backup_phone' => 'nullable|string|regex:/^218(91|92|93|94)\d{7}$/',
+            'backup_phone' => ['nullable', 'string', 'regex:/^218(91|92|93|94)\d{7}$/'],
             'email'        => 'nullable|email|unique:marketers,email|max:255',
             'password'     => 'required|string|min:8|confirmed',
         ];
