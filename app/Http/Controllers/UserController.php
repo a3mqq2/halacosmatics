@@ -23,13 +23,13 @@ class UserController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username',
+            'phone'    => 'required|string|max:20|unique:users,phone',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         User::create([
             'name'                   => $request->name,
-            'username'               => $request->username,
+            'phone'                  => $request->phone,
             'password'               => $request->password,
             'is_super'               => $request->boolean('is_super'),
             'perm_users'             => $request->boolean('perm_users'),
@@ -65,13 +65,13 @@ class UserController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'phone'    => 'required|string|max:20|unique:users,phone,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $data = [
             'name'                   => $request->name,
-            'username'               => $request->username,
+            'phone'                  => $request->phone,
             'is_super'               => $request->boolean('is_super'),
             'perm_users'             => $request->boolean('perm_users'),
             'perm_orders_pending'    => $request->boolean('perm_orders_pending'),

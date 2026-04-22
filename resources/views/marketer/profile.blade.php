@@ -60,7 +60,7 @@
         {{ $initials }}
     </div>
     <h5 class="fw-bold mb-1" style="color:#1a1a1a">{{ $marketer->first_name }} {{ $marketer->last_name }}</h5>
-    <div style="font-size:.82rem;color:#9ca3af;font-weight:600">&#64;{{ $marketer->username }}</div>
+    <div style="font-size:.82rem;color:#9ca3af;font-weight:600">{{ $marketer->phone }}</div>
 </div>
 
 {{-- Info rows --}}

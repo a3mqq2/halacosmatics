@@ -13,7 +13,6 @@ readonly class UpdateMarketerDTO
         public string $phone,
         public ?string $backupPhone,
         public ?string $email,
-        public string $username,
         public ?string $password,
         public ?UploadedFile $passport,
     ) {}
@@ -26,7 +25,6 @@ readonly class UpdateMarketerDTO
             phone:       $request->phone,
             backupPhone: $request->backup_phone,
             email:       $request->email,
-            username:    $request->username,
             password:    $request->filled('password') ? $request->password : null,
             passport:    $request->file('passport'),
         );

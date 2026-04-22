@@ -127,7 +127,6 @@
                         <tr>
                             <th>#</th>
                             <th>الاسم الكامل</th>
-                            <th>اسم المستخدم</th>
                             <th>الهاتف</th>
                             <th>الهاتف الاحتياطي</th>
                             <th>البريد الإلكتروني</th>
@@ -141,7 +140,6 @@
                             <tr>
                                 <td class="text-muted">{{ $marketer->id }}</td>
                                 <td class="fw-semibold">{{ $marketer->first_name }} {{ $marketer->last_name }}</td>
-                                <td class="text-muted">{{ $marketer->username }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-1">
                                         <a href="tel:{{ $marketer->phone }}" class="text-decoration-none">
@@ -253,7 +251,7 @@
                     <div class="d-flex align-items-start justify-content-between mb-2">
                         <div>
                             <h6 class="fw-bold mb-0">{{ $marketer->first_name }} {{ $marketer->last_name }}</h6>
-                            <small class="text-muted">{{ '@' . $marketer->username }}</small>
+                            <small class="text-muted">{{ $marketer->phone }}</small>
                         </div>
                         @if($marketer->status === 'pending')
                             <span class="badge bg-warning-subtle text-warning">قيد المراجعة</span>

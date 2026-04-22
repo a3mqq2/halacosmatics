@@ -24,7 +24,6 @@ class MarketerService
                 AllowedFilter::partial('last_name'),
                 AllowedFilter::partial('phone'),
                 AllowedFilter::partial('email'),
-                AllowedFilter::partial('username'),
                 AllowedFilter::exact('is_active'),
                 AllowedFilter::exact('status'),
                 AllowedFilter::scope('search'),
@@ -47,7 +46,6 @@ class MarketerService
             'phone'        => $dto->phone,
             'backup_phone' => $dto->backupPhone,
             'email'        => $dto->email,
-            'username'     => $dto->username,
             'password'     => $dto->password,
             'passport'     => $passportPath,
             'is_active'    => true,
@@ -63,7 +61,6 @@ class MarketerService
             'phone'        => $dto->phone,
             'backup_phone' => $dto->backupPhone,
             'email'        => $dto->email,
-            'username'     => $dto->username,
         ];
 
         if ($dto->passport) {

@@ -29,7 +29,7 @@
                     <a href="#!" class="link-reset">
                         <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random&color=fff&size=48" alt="user-image" class="rounded-circle mb-2 avatar-md" />
                         <span class="sidenav-user-name fw-bold">{{ Auth::user()->name }}</span>
-                        <span class="fs-12 fw-semibold">{{ '@' . Auth::user()->username }}</span>
+                        <span class="fs-12 fw-semibold">{{ Auth::user()->phone }}</span>
                     </a>
                 </div>
                 <div>

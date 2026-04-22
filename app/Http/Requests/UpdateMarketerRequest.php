@@ -21,7 +21,6 @@ class UpdateMarketerRequest extends FormRequest
             'phone'        => 'required|string|max:20',
             'backup_phone' => 'nullable|string|max:20',
             'email'        => "nullable|email|unique:marketers,email,{$id}|max:255",
-            'username'     => "required|string|unique:marketers,username,{$id}|max:255",
             'password'     => 'nullable|string|min:8|confirmed',
             'passport'     => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ];

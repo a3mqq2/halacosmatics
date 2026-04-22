@@ -27,7 +27,7 @@
                     <tr>
                         <th>#</th>
                         <th>الاسم</th>
-                        <th>اسم المستخدم</th>
+                        <th>رقم الهاتف</th>
                         <th class="text-center">مستخدمين</th>
                         <th class="text-center">مسوقين</th>
                         <th class="text-center">منتجات</th>
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td><code class="text-muted">{{ $user->username }}</code></td>
+                        <td><code class="text-muted">{{ $user->phone }}</code></td>
                         <td class="text-center">
                             @if($user->is_super || $user->perm_users)
                                 <i class="ti ti-circle-check text-success fs-5"></i>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <div class="fw-bold">{{ $user->name }}</div>
-                        <code class="text-muted small">{{ $user->username }}</code>
+                        <code class="text-muted small">{{ $user->phone }}</code>
                     </div>
                     @if($user->is_super)
                         <span class="badge bg-warning-subtle text-warning">مدير عام</span>

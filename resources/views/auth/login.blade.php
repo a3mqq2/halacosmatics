@@ -380,11 +380,11 @@
 
                     {{-- ── Tabs ── --}}
                     <div class="auth-tabs">
-                        <button class="auth-tab {{ $errors->has('username') || $errors->has('password') || !$errors->any() ? 'active' : '' }}"
+                        <button class="auth-tab {{ $errors->has('phone') || $errors->has('password') || !$errors->any() ? 'active' : '' }}"
                                 onclick="switchTab('login')" id="tab-login" type="button">
                             تسجيل الدخول
                         </button>
-                        <button class="auth-tab {{ $errors->has('first_name') || $errors->has('phone') || $errors->has('reg_username') ? 'active' : '' }}"
+                        <button class="auth-tab {{ $errors->has('first_name') || $errors->has('phone') ? 'active' : '' }}"
                                 onclick="switchTab('register')" id="tab-register" type="button">
                             حساب مسوق جديد
                         </button>
@@ -401,14 +401,15 @@
                         <form method="POST" action="{{ route('login') }}" id="loginForm">
                             @csrf
                             <div class="form-group">
-                                <label for="userLogin">اسم المستخدم <span class="required">*</span></label>
+                                <label for="userLogin">رقم الهاتف <span class="required">*</span></label>
                                 <div class="input-wrapper">
-                                    <i class="ti ti-user"></i>
-                                    <input type="text" class="@error('username') is-invalid @enderror"
-                                           id="userLogin" name="username"
-                                           value="{{ old('username') }}" required autofocus />
+                                    <i class="ti ti-phone"></i>
+                                    <input type="tel" class="@error('phone') is-invalid @enderror"
+                                           id="userLogin" name="phone"
+                                           value="{{ old('phone') }}" required autofocus
+                                           placeholder="0xxxxxxxxx" />
                                 </div>
-                                @error('username')
+                                @error('phone')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -442,7 +443,7 @@
                             <p>سجّل بياناتك للانضمام كمسوق</p>
                         </div>
 
-                        @if($errors->any() && ($errors->has('first_name') || $errors->has('phone') || $errors->has('reg_username')))
+                        @if($errors->any() && ($errors->has('first_name') || $errors->has('phone')))
                             <div style="background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:10px;padding:12px 16px;font-size:13px;margin-bottom:16px;">
                                 <ul style="margin:0;padding-right:16px">
                                     @foreach($errors->all() as $err)
@@ -516,20 +517,6 @@
                                 </div>
                             </div>
 
-                            {{-- Username --}}
-                            <div class="form-group">
-                                <label>اسم المستخدم <span class="required">*</span></label>
-                                <div class="input-wrapper">
-                                    <i class="ti ti-at"></i>
-                                    <input type="text" name="username"
-                                           value="{{ old('username') }}"
-                                           autocomplete="off"
-                                           class="@error('username') is-invalid @enderror" required />
-                                </div>
-                                @error('username')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
 
                             {{-- Password --}}
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">

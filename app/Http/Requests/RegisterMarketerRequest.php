@@ -19,7 +19,6 @@ class RegisterMarketerRequest extends FormRequest
             'phone'        => 'required|string|max:20',
             'backup_phone' => 'nullable|string|max:20',
             'email'        => 'nullable|email|unique:marketers,email|max:255',
-            'username'     => 'required|string|unique:marketers,username|max:255',
             'password'     => 'required|string|min:8|confirmed',
         ];
     }

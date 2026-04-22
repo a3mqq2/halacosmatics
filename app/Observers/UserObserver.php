@@ -12,7 +12,7 @@ class UserObserver
         if (!Auth::guard('web')->check()) return;
 
         Auth::guard('web')->user()->logs()->create([
-            'description' => "أضاف مستخدماً جديداً: {$user->name} ({$user->username})",
+            'description' => "أضاف مستخدماً جديداً: {$user->name}",
         ]);
     }
 
@@ -26,7 +26,7 @@ class UserObserver
 
         $labels = [
             'name'           => 'الاسم',
-            'username'       => 'اسم المستخدم',
+            'phone'          => 'رقم الهاتف',
             'is_super'       => 'مدير عام',
             'perm_users'     => 'صلاحية المستخدمين',
             'perm_marketers' => 'صلاحية المسوقين',
@@ -47,7 +47,7 @@ class UserObserver
         if (!Auth::guard('web')->check()) return;
 
         Auth::guard('web')->user()->logs()->create([
-            'description' => "حذف المستخدم: {$user->name} ({$user->username})",
+            'description' => "حذف المستخدم: {$user->name}",
         ]);
     }
 }

@@ -38,10 +38,10 @@
                 </div>
 
                 <div class="col-12 col-sm-6">
-                    <label class="form-label fw-semibold">اسم المستخدم <span class="text-danger">*</span></label>
-                    <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
-                           value="{{ old('username', $user->username) }}" required>
-                    @error('username') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <label class="form-label fw-semibold">رقم الهاتف <span class="text-danger">*</span></label>
+                    <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror"
+                           value="{{ old('phone', $user->phone) }}" required placeholder="09xxxxxxxx">
+                    @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-12 col-sm-6">

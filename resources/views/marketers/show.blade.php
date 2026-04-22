@@ -19,7 +19,7 @@
                 <h4 class="mb-1 fw-bold">{{ $marketer->first_name }} {{ $marketer->last_name }}</h4>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <span class="text-muted fs-14">
-                        <i class="ti ti-at me-1"></i>{{ $marketer->username }}
+                        <i class="ti ti-phone me-1"></i>{{ $marketer->phone }}
                     </span>
                     @if($marketer->is_active)
                         <span class="badge bg-success-subtle text-success">
@@ -155,15 +155,6 @@
             <div class="tab-pane fade" id="tab-account" role="tabpanel">
                 <ul class="list-group list-group-flush">
 
-                    <li class="list-group-item d-flex align-items-center gap-3 py-3">
-                        <span class="avatar-xs bg-secondary-subtle text-secondary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0">
-                            <i class="ti ti-user fs-16"></i>
-                        </span>
-                        <div>
-                            <small class="text-muted d-block">اسم المستخدم</small>
-                            <span class="fw-semibold">{{ $marketer->username }}</span>
-                        </div>
-                    </li>
 
                     <li class="list-group-item d-flex align-items-center gap-3 py-3">
                         <span class="avatar-xs bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0">

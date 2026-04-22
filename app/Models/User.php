@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 
 #[ObservedBy(UserObserver::class)]
 #[Fillable([
-    'name', 'username', 'password', 'is_super',
+    'name', 'phone', 'password', 'is_super',
     'perm_users',
     'perm_orders_pending', 'perm_orders_active', 'perm_orders_delivered',
     'perm_orders_returned', 'perm_orders_approve', 'perm_orders_deliver',

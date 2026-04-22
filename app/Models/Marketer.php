@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[ObservedBy(MarketerObserver::class)]
-#[Fillable(['first_name', 'last_name', 'phone', 'backup_phone', 'email', 'username', 'password', 'passport', 'is_active', 'status', 'balance'])]
+#[Fillable(['first_name', 'last_name', 'phone', 'backup_phone', 'email', 'password', 'passport', 'is_active', 'status', 'balance'])]
 #[Hidden(['password', 'remember_token'])]
 class Marketer extends Authenticatable
 {
@@ -54,8 +54,7 @@ class Marketer extends Authenticatable
             $q->where('first_name', 'like', "%{$value}%")
               ->orWhere('last_name', 'like', "%{$value}%")
               ->orWhere('phone', 'like', "%{$value}%")
-              ->orWhere('email', 'like', "%{$value}%")
-              ->orWhere('username', 'like', "%{$value}%");
+              ->orWhere('email', 'like', "%{$value}%");
         });
     }
 }

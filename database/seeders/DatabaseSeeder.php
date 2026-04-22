@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name'     => 'هالة',
-            'username' => 'hala',
+            'phone'    => '0910000000',
             'password' => Hash::make(123123123),
             'is_super' => true,
         ]);

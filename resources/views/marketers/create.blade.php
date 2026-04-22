@@ -124,17 +124,6 @@
             </p>
             <div class="row g-3 mb-4">
 
-                <div class="col-12 col-sm-6">
-                    <label class="form-label">اسم المستخدم <span class="text-danger">*</span></label>
-                    <input type="text"
-                           name="username"
-                           class="form-control @error('username') is-invalid @enderror"
-                           value="{{ old('username') }}"
-                           autocomplete="off">
-                    @error('username')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
 
                 <div class="col-12 col-sm-6">
                     <label class="form-label">كلمة المرور <span class="text-danger">*</span></label>
