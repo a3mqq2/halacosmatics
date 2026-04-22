@@ -288,48 +288,7 @@
                 </div>
             </header>
             <!-- Topbar End -->
- <div class="sidenav-menu">
-    <!-- Brand Logo -->
-    <a href="{{asset('dashboard')}}" class="logo">
-        <span class="logo logo-light">
-            <span class="logo-lg"><img src="{{asset('HULUL ERP.png')}}" style="height:50px!important;"  alt="logo" /></span>
-            <span class="logo-sm"><img src="{{ asset('assets/images/logo-sm.png') }}" alt="small logo" /></span>
-        </span>
-
-        <span class="logo logo-dark">
-            <span class="logo-lg"><img src="{{asset('HULUL ERP.png')}}" alt="dark logo" style="height: 70px!important;"  /></span>
-            <span class="logo-sm"><img src="{{asset('assets/images/logo-sm.png')}}" alt="small logo" /></span>
-        </span>
-    </a>
-
-    <!-- Sidebar Hover Menu Toggle Button -->
-    <button class="button-on-hover">
-        <i class="ti ti-circle align-middle"></i>
-    </button>
-
-    <!-- Full Sidebar Menu Close Button -->
-    <button class="button-close-offcanvas">
-        <i class="ti ti-menu-4 align-middle"></i>
-    </button>
-
-    <div class="scrollbar" data-simplebar="">
-        <div id="user-profile-settings" class="sidenav-user p-2">
-            <div class="d-flex align-items-center gap-2">
-                <div class="avatar-sm">
-                    <span class="avatar-title bg-primary text-white rounded-circle fs-14 fw-bold">
-                        {{ Auth::check() ? strtoupper(substr(Auth::user()->name, 0, 2)) : 'م' }}
-                    </span>
-                </div>
-                <div class="flex-grow-1">
-                    <span class="sidenav-user-name fw-semibold fs-14">{{ Auth::check() ? Auth::user()->name : 'مستخدم' }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!--- Sidenav Menu -->
-        @include('layouts.sidebar')
-    </div>
-</div>
+@include('layouts.sidebar')
 <!-- Sidenav Menu End -->
 
 

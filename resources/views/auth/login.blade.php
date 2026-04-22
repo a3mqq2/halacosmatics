@@ -39,7 +39,6 @@
             }
 
             body {
-                display: flex;
                 background: var(--login-bg);
             }
 
@@ -89,6 +88,7 @@
             .login-form-side {
                 flex: 1;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
                 padding: 40px;
@@ -253,24 +253,11 @@
             }
 
             .login-footer {
-                position: absolute;
-                bottom: 20px;
-                left: 0;
-                right: 0;
                 text-align: center;
                 font-size: 13px;
                 color: var(--login-text-secondary);
-            }
-
-            @media (max-width: 991px) {
-                .login-footer {
-                    position: static;
-                    padding: 20px 16px;
-                    margin-top: 8px;
-                }
-                .login-form-side {
-                    padding-bottom: 0 !important;
-                }
+                padding: 16px 0 4px;
+                width: 100%;
             }
 
             /* ── Tabs ── */
@@ -559,6 +546,10 @@
                     </div>
 
                 </div>
+
+                <div class="login-footer">
+                    تنفيذ <strong><a href="">شركة حلول لتقنية المعلومات</a></strong>
+                </div>
             </div>
 
             <div class="login-image-side">
@@ -567,12 +558,6 @@
                     <p></p>
                 </div>
             </div>
-        </div>
-
-        <div class="login-footer">
-            تنفيذ <strong> 
-                <a href="">شركة حلول لتقنية المعلومات</a>
-            </strong>
         </div>
 
         {{-- ── Confirm Modal ── --}}
