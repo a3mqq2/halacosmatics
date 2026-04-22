@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
@@ -22,6 +23,13 @@ class AuthController extends Controller
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
+
+            Log::channel('single')->warning('[AUTH] تم حجب المحاولة بسبب تجاوز الحد المسموح', [
+                'phone_input'       => $request->phone,
+                'ip'                => $request->ip(),
+                'retry_after_secs'  => $seconds,
+            ]);
+
             throw ValidationException::withMessages([
                 'phone' => "محاولات كثيرة. حاول بعد {$seconds} ثانية.",
             ]);
@@ -36,6 +44,12 @@ class AuthController extends Controller
         }
 
         RateLimiter::hit($key, 60);
+
+        Log::channel('single')->warning('[AUTH] إرجاع خطأ للمستخدم: بيانات غير صحيحة', [
+            'phone_input' => $request->phone,
+            'ip'          => $request->ip(),
+            'attempts'    => RateLimiter::attempts($key),
+        ]);
 
         return back()->withErrors([
             'phone' => 'بيانات تسجيل الدخول غير صحيحة.',
