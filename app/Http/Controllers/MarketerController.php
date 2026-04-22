@@ -10,6 +10,7 @@ use App\Http\Requests\StoreMarketerTransactionRequest;
 use App\Http\Requests\UpdateMarketerRequest;
 use App\Models\Marketer;
 use App\Services\MarketerService;
+use Illuminate\Support\Facades\Auth;
 
 class MarketerController extends Controller
 {
@@ -29,10 +30,11 @@ class MarketerController extends Controller
 
     public function register(RegisterMarketerRequest $request)
     {
-        $this->marketerService->create(CreateMarketerDTO::fromRequest($request, 'pending'));
+        $marketer = $this->marketerService->create(CreateMarketerDTO::fromRequest($request, 'approved'));
 
-        return redirect()->route('login')
-            ->with('register_success', 'تم استلام طلبك بنجاح! سيتم مراجعة بياناتك من قِبل الإدارة وتفعيل حسابك قريباً.');
+        Auth::guard('marketer')->login($marketer);
+
+        return redirect()->route('marketer.dashboard');
     }
 
     public function store(StoreMarketerRequest $request)
