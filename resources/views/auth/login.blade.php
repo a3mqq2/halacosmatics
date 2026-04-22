@@ -483,15 +483,20 @@
                             <div class="form-group">
                                 <label>رقم الهاتف <span class="required">*</span></label>
                                 <input type="hidden" name="phone" id="reg_phone">
-                                <div class="phone-group @error('phone') is-invalid @enderror">
+                                <div class="phone-group @error('phone') is-invalid @enderror" id="reg_phone_group">
                                     <span class="phone-prefix">218</span>
                                     <input type="text" id="reg_phone_num"
                                            value="{{ old('phone') ? substr(old('phone'),3) : '' }}"
-                                           maxlength="9" inputmode="numeric" />
+                                           maxlength="9" inputmode="numeric"
+                                           placeholder="9xxxxxxxx" autocomplete="off" />
                                 </div>
+                                <small style="color:#6b7280;font-size:12px;margin-top:4px;display:block">
+                                    يبدأ بـ 91 أو 92 أو 93 أو 94 — مثال: <strong>927093510</strong>
+                                </small>
                                 @error('phone')
                                     <div class="invalid-feedback" style="display:block">{{ $message }}</div>
                                 @enderror
+                                <div id="reg_phone_error" style="color:#ef4444;font-size:12px;margin-top:4px;display:none"></div>
                             </div>
 
                             {{-- Backup Phone --}}
@@ -637,25 +642,52 @@
             btn.innerHTML = '<span class="spinner-border"></span>جاري الدخول...';
         });
 
-        // ── Register submit ───────────────────────────────────
-        document.getElementById('registerForm').addEventListener('submit', function() {
-            var btn = document.getElementById('registerBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border"></span>جاري الحفظ...';
-        });
-
         // ── Phone builder ─────────────────────────────────────
         function initPhone(numId, hiddenId) {
             const num = document.getElementById(numId);
             const sync = () => {
-                num.value = num.value.replace(/\D/g, '');
-                document.getElementById(hiddenId).value = num.value ? '218' + num.value : '';
+                let val = num.value.replace(/\D/g, '');
+                val = val.replace(/^0+/, '');
+                val = val.slice(0, 9);
+                num.value = val;
+                document.getElementById(hiddenId).value = val ? '218' + val : '';
             };
             num.addEventListener('input', sync);
             sync();
         }
         initPhone('reg_phone_num',  'reg_phone');
         initPhone('reg_backup_num', 'reg_backup_phone');
+
+        // ── Register submit ───────────────────────────────────
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            var phoneVal = document.getElementById('reg_phone_num').value;
+            var errEl    = document.getElementById('reg_phone_error');
+            var group    = document.getElementById('reg_phone_group');
+
+            var validPrefixes = ['91', '92', '93', '94'];
+            var prefix = phoneVal.slice(0, 2);
+
+            if (phoneVal.length !== 9) {
+                e.preventDefault();
+                errEl.textContent = 'رقم الهاتف يجب أن يكون 9 أرقام بالضبط.';
+                errEl.style.display = 'block';
+                group.classList.add('is-invalid');
+                return;
+            }
+            if (!validPrefixes.includes(prefix)) {
+                e.preventDefault();
+                errEl.textContent = 'رقم الهاتف يجب أن يبدأ بـ 91 أو 92 أو 93 أو 94.';
+                errEl.style.display = 'block';
+                group.classList.add('is-invalid');
+                return;
+            }
+
+            errEl.style.display = 'none';
+            group.classList.remove('is-invalid');
+            var btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border"></span>جاري الحفظ...';
+        });
 
         </script>
     </body>

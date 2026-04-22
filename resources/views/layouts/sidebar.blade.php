@@ -1,6 +1,6 @@
 <div class="sidenav-menu">
     <!-- Brand Logo -->
-    <a href="{{ route('dashboard') }}" class="logo">
+    {{-- <a href="{{ route('dashboard') }}" class="logo">
         <span class="logo logo-light">
             <span class="logo-lg"><img src="{{ asset('assets/images/logo-black.png') }}" style="height: 65px;" alt="logo" /></span>
             <span class="logo-sm"><img src="{{ asset('assets/images/logo-sm.png') }}" alt="small logo" /></span>
@@ -9,7 +9,7 @@
             <span class="logo-lg"><img src="{{ asset('assets/images/logo-black.png') }}" style="height: 65px;" alt="dark logo" /></span>
             <span class="logo-sm"><img src="{{ asset('assets/images/logo-sm.png') }}" alt="small logo" /></span>
         </span>
-    </a>
+    </a> --}}
 
     <!-- Sidebar Hover Menu Toggle Button -->
     <button class="button-on-hover">
