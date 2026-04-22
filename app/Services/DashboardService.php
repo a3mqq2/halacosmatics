@@ -11,7 +11,6 @@ class DashboardService
     {
         return [
             'totalMarketers'   => Marketer::count(),
-            'pendingMarketers' => Marketer::where('status', 'pending')->count(),
             'activeMarketers'  => Marketer::where('status', 'approved')->where('is_active', true)->count(),
 
             'totalProducts'    => Product::count(),

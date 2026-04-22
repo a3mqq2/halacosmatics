@@ -97,11 +97,7 @@
     .stat-total   .icon-wrap { background: #e0e7ff; color: #8d5342; }
     .stat-total   .stat-label, .stat-total .stat-count { color: #3730a3; }
 
-    .stat-pending { background: #fffbeb; border-color: #fde68a; }
-    .stat-pending .icon-wrap { background: #fef3c7; color: #d97706; }
-    .stat-pending .stat-label, .stat-pending .stat-count { color: #92400e; }
-
-    .stat-active  { background: #f0fdf4; border-color: #bbf7d0; }
+.stat-active  { background: #f0fdf4; border-color: #bbf7d0; }
     .stat-active  .icon-wrap { background: #dcfce7; color: #16a34a; }
     .stat-active  .stat-label, .stat-active  .stat-count { color: #14532d; }
 
@@ -165,21 +161,7 @@
         </a>
     </div>
 
-    <div class="col-12 col-sm-6 col-xl-4">
-        <a href="{{ route('marketers.index', ['filter[is_active]' => '', 'filter[status]' => 'pending']) }}"
-           class="stat-card stat-pending d-flex">
-            <div class="icon-wrap">
-                <i class="ti ti-clock-hour-4"></i>
-            </div>
-            <div>
-                <p class="stat-label mb-0">قيد المراجعة</p>
-                <div class="stat-count">{{ $pendingMarketers }}</div>
-                <p class="stat-sub mb-0">بانتظار القبول أو الرفض</p>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-12 col-sm-6 col-xl-4">
+<div class="col-12 col-sm-6 col-xl-4">
         <a href="{{ route('marketers.index', ['filter[is_active]' => '1']) }}"
            class="stat-card stat-active d-flex">
             <div class="icon-wrap">
