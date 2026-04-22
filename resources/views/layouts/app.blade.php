@@ -24,6 +24,18 @@
             body,h1,h2,h3,h4,h5,h6,p,span,td,th,button,a,label,input,option {
                font-family: "Almarai", sans-serif !important;
             }
+            .sidenav-menu .logo {
+                position: relative;
+                z-index: 10;
+            }
+            .sidenav-menu .scrollbar[data-simplebar] {
+                position: absolute;
+                top: 65px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: auto;
+            }
         </style>
 
 

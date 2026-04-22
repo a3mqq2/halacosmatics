@@ -491,7 +491,7 @@
                                            placeholder="9xxxxxxxx" autocomplete="off" />
                                 </div>
                                 <small style="color:#6b7280;font-size:12px;margin-top:4px;display:block">
-                                    يبدأ بـ 91 أو 92 أو 93 أو 94 — مثال: <strong>927093510</strong>
+                                    يبدأ بـ 91 أو 92 أو 93 أو 94 — مثال: <strong>923456789</strong>
                                 </small>
                                 @error('phone')
                                     <div class="invalid-feedback" style="display:block">{{ $message }}</div>
