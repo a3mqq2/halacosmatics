@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\DTOs\FailDeliveryData;
 use App\Http\Requests\AcceptReturnRequest;
+use App\Http\Requests\ApproveOrderRequest;
 use App\Http\Requests\DeliverOrderRequest;
 use App\Http\Requests\FailDeliveryRequest;
 use App\Models\Agent;
 use App\Models\Order;
+use App\Models\Vault;
 use App\Services\MosafirClient;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -80,7 +82,9 @@ class OrderController extends Controller
             ? $mosafir->showParcel($order->mosafir_parcel_id)
             : null;
 
-        return view('orders.show', compact('order', 'agents', 'cities', 'mosafirParcel'));
+        $vaults = Vault::orderBy('name')->get();
+
+        return view('orders.show', compact('order', 'agents', 'cities', 'mosafirParcel', 'vaults'));
     }
 
     public function dispatch(Request $request, Order $order, MosafirClient $mosafir)
@@ -149,13 +153,13 @@ class OrderController extends Controller
         return back()->with('error', 'نوع الإحالة غير صالح.');
     }
 
-    public function approve(Order $order, OrderService $service)
+    public function approve(ApproveOrderRequest $request, Order $order, OrderService $service)
     {
         if ($order->status !== 'pending') {
             return back()->with('error', 'لا يمكن الموافقة على هذا الطلب.');
         }
 
-        $service->approve($order);
+        $service->approve($order, $request->input('vault_id') ? (int) $request->input('vault_id') : null);
 
         return back()->with('success', 'تمت الموافقة على الطلب بنجاح.');
     }

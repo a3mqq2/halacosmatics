@@ -349,6 +349,27 @@
                 <div class="modal-body">
                     <p class="mb-1">هل تريد الموافقة على هذا الطلب؟</p>
                     <p class="text-muted small mb-0">سيتغير الطلب إلى حالة <strong>قيد التجهيز</strong> وسيُسجَّل في السجل.</p>
+
+                    @if($order->has_deposit && $order->deposit_payer === 'company' && $order->deposit_amount > 0)
+                    <div class="alert alert-warning mt-3 mb-0 py-2 px-3 d-flex align-items-center gap-2">
+                        <i class="ti ti-cash fs-5"></i>
+                        <span>هذا الطلب فيه عربون <strong>{{ number_format($order->deposit_amount) }} د.ل</strong> على حساب الشركة.</span>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label fw-semibold">اختر الخزينة <span class="text-danger">*</span></label>
+                        <select name="vault_id" class="form-select @error('vault_id') is-invalid @enderror" required>
+                            <option value="">— اختر خزينة —</option>
+                            @foreach($vaults as $vault)
+                                <option value="{{ $vault->id }}" {{ old('vault_id') == $vault->id ? 'selected' : '' }}>
+                                    {{ $vault->name }} ({{ number_format($vault->current_balance) }} د.ل)
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('vault_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    @endif
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
@@ -635,4 +656,11 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 <script src="{{ asset('assets/js/admin/orders.js') }}"></script>
+@if($errors->has('vault_id'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new bootstrap.Modal(document.getElementById('approveModal')).show();
+    });
+</script>
+@endif
 @endpush

@@ -534,7 +534,7 @@
         const amt             = hasDeposit && amtInput ? parseFloat(amtInput.value) : 0;
         const delivCost       = parseFloat(document.getElementById('hiddenDeliveryCost').value) || 0;
         const base            = {{ $cart['total'] }};
-        const grand           = base + delivCost + amt;
+        const grand           = base + delivCost;
         grandTotalEl.textContent = grand.toLocaleString('ar') + ' د.ل';
 
         const collectionRow = document.getElementById('collectionRow');

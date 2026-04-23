@@ -9,6 +9,8 @@ use App\Models\Marketer;
 use App\Models\MarketerTransaction;
 use App\Models\Order;
 use App\Models\ProductQuantityLog;
+use App\Models\Vault;
+use App\Models\VaultTransaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -70,9 +72,9 @@ class OrderService
         });
     }
 
-    public function approve(Order $order): void
+    public function approve(Order $order, ?int $vaultId = null): void
     {
-        DB::transaction(function () use ($order) {
+        DB::transaction(function () use ($order, $vaultId) {
             $admin = Auth::guard('web')->user();
 
             $order->update([
@@ -85,6 +87,25 @@ class OrderService
                 'action'      => 'approved',
                 'description' => "تمت الموافقة على الطلب بواسطة {$admin->name} — الطلب قيد التجهيز.",
             ]);
+
+            if ($order->has_deposit && $order->deposit_payer === 'company' && $vaultId && $order->deposit_amount > 0) {
+                $vault        = Vault::findOrFail($vaultId);
+                $depositAmt   = (float) $order->deposit_amount;
+                $balanceAfter = (float) $vault->current_balance + $depositAmt;
+
+                $vault->update(['current_balance' => $balanceAfter]);
+
+                VaultTransaction::create([
+                    'vault_id'       => $vault->id,
+                    'user_id'        => $admin->id,
+                    'type'           => 'deposit',
+                    'recipient_name' => trim($order->marketer->first_name . ' ' . $order->marketer->last_name),
+                    'description'    => "عربون طلب #{$order->id}",
+                    'amount'         => $depositAmt,
+                    'date'           => now()->toDateString(),
+                    'balance_after'  => $balanceAfter,
+                ]);
+            }
 
             $order->load('items.product');
 
