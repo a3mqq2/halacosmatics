@@ -196,6 +196,58 @@
 </div>
 @endif
 
+{{-- ===== المنتجات ===== --}}
+@if(Auth::user()->can_access('products.view'))
+<p class="section-title"><i class="ti ti-box me-1"></i> المنتجات</p>
+<div class="row g-3">
+
+    <div class="col-6 col-sm-4 col-xl-3">
+        <a href="{{ route('products.index') }}" class="stat-card stat-product d-flex">
+            <div class="icon-wrap"><i class="ti ti-box"></i></div>
+            <div>
+                <p class="stat-label mb-0">إجمالي المنتجات</p>
+                <div class="stat-count">{{ $totalProducts }}</div>
+                <p class="stat-sub mb-0">جميع السجلات</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-sm-4 col-xl-3">
+        <a href="{{ route('products.index', ['filter[is_active]' => '1']) }}" class="stat-card stat-active d-flex">
+            <div class="icon-wrap"><i class="ti ti-box-seam"></i></div>
+            <div>
+                <p class="stat-label mb-0">المنتجات المفعّلة</p>
+                <div class="stat-count">{{ $activeProducts }}</div>
+                <p class="stat-sub mb-0">نشطة ومتاحة</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-sm-4 col-xl-3">
+        <a href="{{ route('products.index', ['filter[is_active]' => '0']) }}" class="stat-card stat-inactive d-flex">
+            <div class="icon-wrap"><i class="ti ti-box-off"></i></div>
+            <div>
+                <p class="stat-label mb-0">الموقوفة</p>
+                <div class="stat-count">{{ $inactiveProducts }}</div>
+                <p class="stat-sub mb-0">غير نشطة</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-sm-4 col-xl-3">
+        <a href="{{ route('products.index') }}" class="stat-card stat-qty d-flex">
+            <div class="icon-wrap"><i class="ti ti-stack"></i></div>
+            <div>
+                <p class="stat-label mb-0">إجمالي الكميات</p>
+                <div class="stat-count">{{ number_format($totalQuantity) }}</div>
+                <p class="stat-sub mb-0">مجموع المخزون</p>
+            </div>
+        </a>
+    </div>
+
+</div>
+@endif
+
 {{-- ===== الطلبات ===== --}}
 @php
     $canSeeOrders = Auth::user()->is_super
@@ -285,57 +337,7 @@
 </div>
 @endif
 
-{{-- ===== المنتجات ===== --}}
-@if(Auth::user()->can_access('products.view'))
-<p class="section-title"><i class="ti ti-box me-1"></i> المنتجات</p>
-<div class="row g-3">
 
-    <div class="col-6 col-sm-4 col-xl-3">
-        <a href="{{ route('products.index') }}" class="stat-card stat-product d-flex">
-            <div class="icon-wrap"><i class="ti ti-box"></i></div>
-            <div>
-                <p class="stat-label mb-0">إجمالي المنتجات</p>
-                <div class="stat-count">{{ $totalProducts }}</div>
-                <p class="stat-sub mb-0">جميع السجلات</p>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-6 col-sm-4 col-xl-3">
-        <a href="{{ route('products.index', ['filter[is_active]' => '1']) }}" class="stat-card stat-active d-flex">
-            <div class="icon-wrap"><i class="ti ti-box-seam"></i></div>
-            <div>
-                <p class="stat-label mb-0">المنتجات المفعّلة</p>
-                <div class="stat-count">{{ $activeProducts }}</div>
-                <p class="stat-sub mb-0">نشطة ومتاحة</p>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-6 col-sm-4 col-xl-3">
-        <a href="{{ route('products.index', ['filter[is_active]' => '0']) }}" class="stat-card stat-inactive d-flex">
-            <div class="icon-wrap"><i class="ti ti-box-off"></i></div>
-            <div>
-                <p class="stat-label mb-0">الموقوفة</p>
-                <div class="stat-count">{{ $inactiveProducts }}</div>
-                <p class="stat-sub mb-0">غير نشطة</p>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-6 col-sm-4 col-xl-3">
-        <a href="{{ route('products.index') }}" class="stat-card stat-qty d-flex">
-            <div class="icon-wrap"><i class="ti ti-stack"></i></div>
-            <div>
-                <p class="stat-label mb-0">إجمالي الكميات</p>
-                <div class="stat-count">{{ number_format($totalQuantity) }}</div>
-                <p class="stat-sub mb-0">مجموع المخزون</p>
-            </div>
-        </a>
-    </div>
-
-</div>
-@endif
 
 {{-- ===== روابط سريعة ===== --}}
 <p class="section-title"><i class="ti ti-layout-grid me-1"></i> إدارة النظام</p>
