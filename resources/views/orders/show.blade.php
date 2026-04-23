@@ -45,6 +45,13 @@
             </button>
         @endif
 
+        @if($order->status === 'processing' && Auth::user()->can_access('orders.approve'))
+            <button type="button" class="btn btn-danger btn-sm"
+                    data-bs-toggle="modal" data-bs-target="#cancelModal">
+                <i class="ti ti-ban me-1"></i> إلغاء الطلب
+            </button>
+        @endif
+
         @if($order->status === 'returning' && $order->agent_id && Auth::user()->can_access('orders.returned'))
             <button type="button" class="btn btn-secondary btn-sm"
                     data-bs-toggle="modal" data-bs-target="#acceptReturnModal">
@@ -249,6 +256,31 @@
                 @endphp
                 <dl class="info-list">
                     <div class="info-row">
+                        <dt>طريقة الدفع</dt>
+                        <dd>
+                            @if($order->payment_method === 'bank_transfer')
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                    <i class="ti ti-building-bank me-1"></i> تحويل مصرفي
+                                </span>
+                                @if($order->delivery_included)
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle ms-1">شامل التوصيل</span>
+                                @else
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle ms-1">منتجات فقط</span>
+                                @endif
+                                @if($order->payment_proof)
+                                    <a href="{{ Storage::url($order->payment_proof) }}" target="_blank"
+                                       class="btn btn-outline-secondary btn-sm ms-2 py-0" style="font-size:.75rem">
+                                        <i class="ti ti-file-check me-1"></i> إيصال التحويل
+                                    </a>
+                                @endif
+                            @else
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                                    <i class="ti ti-cash me-1"></i> كاش
+                                </span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="info-row">
                         <dt>إجمالي البيع</dt>
                         <dd>{{ number_format($order->products_total) }} د.ل</dd>
                     </div>
@@ -310,6 +342,18 @@
                         <dd class="text-muted">{{ $order->rejected_reason }}</dd>
                     </div>
                     @endif
+                    @if($order->cancelled_at)
+                    <div class="info-row">
+                        <dt>تم الإلغاء بواسطة</dt>
+                        <dd class="text-danger fw-semibold">{{ $order->cancelledBy?->name ?? 'المسوقة' }} — {{ dt($order->cancelled_at) }}</dd>
+                    </div>
+                    @if($order->cancelled_reason)
+                    <div class="info-row border-0">
+                        <dt>سبب الإلغاء</dt>
+                        <dd class="text-muted">{{ $order->cancelled_reason }}</dd>
+                    </div>
+                    @endif
+                    @endif
                 </dl>
             </div>
 
@@ -349,6 +393,22 @@
                 <div class="modal-body">
                     <p class="mb-1">هل تريد الموافقة على هذا الطلب؟</p>
                     <p class="text-muted small mb-0">سيتغير الطلب إلى حالة <strong>قيد التجهيز</strong> وسيُسجَّل في السجل.</p>
+
+                    @if($order->payment_method === 'bank_transfer')
+                    @php
+                        $bankAmount = $order->delivery_included ? $order->grand_total : $order->products_total;
+                    @endphp
+                    <div class="alert alert-info mt-3 mb-0 py-2 px-3 d-flex align-items-center gap-2">
+                        <i class="ti ti-building-bank fs-5"></i>
+                        <span>
+                            سيُودَع <strong>{{ number_format($bankAmount) }} د.ل</strong>
+                            في الخزينة المصرفية (BNK)
+                            {{ $order->delivery_included ? '(شامل التوصيل)' : '(منتجات فقط)' }}.
+                            <br>
+                            <small class="text-muted">وسيُضاف <strong>{{ number_format($order->products_total) }} د.ل</strong> لرصيد المسوقة فوراً.</small>
+                        </span>
+                    </div>
+                    @endif
 
                     @if($order->has_deposit && $order->deposit_payer === 'company' && $order->deposit_amount > 0)
                     <div class="alert alert-warning mt-3 mb-0 py-2 px-3 d-flex align-items-center gap-2">
@@ -646,6 +706,40 @@
 </div>
 @endif
 
+{{-- Cancel Modal --}}
+@if($order->status === 'processing' && Auth::user()->can_access('orders.approve'))
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('orders.cancel', $order) }}">
+                @csrf @method('PATCH')
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-danger">
+                        <i class="ti ti-ban me-1"></i> إلغاء الطلب #{{ $order->id }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">سيتغير الطلب إلى <strong>ملغى</strong> وستُعاد كميات المنتجات للمخزون تلقائياً.</p>
+                    <label class="form-label fw-semibold">سبب الإلغاء <span class="text-danger">*</span></label>
+                    <textarea name="cancelled_reason" class="form-control @error('cancelled_reason') is-invalid @enderror"
+                              rows="4" placeholder="اكتب سبب الإلغاء بوضوح..." required>{{ old('cancelled_reason') }}</textarea>
+                    @error('cancelled_reason')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">رجوع</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="ti ti-ban me-1"></i> تأكيد الإلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
 @endsection
 
 @push('styles')
@@ -660,6 +754,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         new bootstrap.Modal(document.getElementById('approveModal')).show();
+    });
+</script>
+@endif
+@if($errors->has('cancelled_reason'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new bootstrap.Modal(document.getElementById('cancelModal')).show();
     });
 </script>
 @endif

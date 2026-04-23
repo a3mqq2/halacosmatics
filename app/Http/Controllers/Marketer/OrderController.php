@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Marketer;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\MosafirClient;
+use App\Services\OrderService;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -45,5 +46,22 @@ class OrderController extends Controller
             : null;
 
         return view('marketer.orders.show', compact('order', 'mosafirParcel'));
+    }
+
+    public function cancel(Order $order, OrderService $service)
+    {
+        $marketer = Auth::guard('marketer')->user();
+
+        if ($order->marketer_id !== $marketer->id) {
+            abort(403);
+        }
+
+        if ($order->status !== 'pending') {
+            return back()->with('error', 'لا يمكن إلغاء هذا الطلب.');
+        }
+
+        $service->cancelByMarketer($order);
+
+        return back()->with('success', 'تم إلغاء الطلب بنجاح.');
     }
 }

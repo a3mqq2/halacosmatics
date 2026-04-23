@@ -332,6 +332,17 @@
             </div>
         </a>
     </div>
+
+    <div class="col-6 col-sm-4 col-xl-2">
+        <a href="{{ route('orders.index', ['filter[status]' => 'cancelled']) }}" class="stat-card stat-inactive d-flex">
+            <div class="icon-wrap"><i class="ti ti-ban"></i></div>
+            <div>
+                <p class="stat-label mb-0">ملغاة</p>
+                <div class="stat-count">{{ $ordersCancelled }}</div>
+                <p class="stat-sub mb-0">تم الإلغاء</p>
+            </div>
+        </a>
+    </div>
     @endif
 
 </div>

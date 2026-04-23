@@ -24,10 +24,13 @@ class CheckoutRequest extends FormRequest
             'sub_city_id'    => 'nullable|integer',
             'sub_city_name'  => 'nullable|string|max:255',
             'delivery_cost'  => 'required|numeric|min:0',
-            'has_deposit'    => 'nullable|boolean',
-            'deposit_amount' => 'nullable|required_if:has_deposit,1|integer|in:5,10,20,30',
-            'deposit_payer'  => 'nullable|required_if:has_deposit,1|in:marketer,company',
-            'deposit_proof'  => 'nullable|required_if:deposit_payer,company|file|mimes:jpg,jpeg,png|max:5120',
+            'has_deposit'      => 'nullable|boolean',
+            'deposit_amount'   => 'nullable|required_if:has_deposit,1|integer|in:5,10,20,30',
+            'deposit_payer'    => 'nullable|required_if:has_deposit,1|in:marketer,company',
+            'deposit_proof'    => 'nullable|required_if:deposit_payer,company|file|mimes:jpg,jpeg,png|max:5120',
+            'payment_method'   => 'required|in:cash,bank_transfer',
+            'payment_proof'    => 'nullable|required_if:payment_method,bank_transfer|file|mimes:jpg,jpeg,png|max:5120',
+            'delivery_included'=> 'nullable|boolean',
         ];
     }
 
@@ -39,7 +42,9 @@ class CheckoutRequest extends FormRequest
             'address'        => 'العنوان',
             'city_id'        => 'المدينة',
             'city_name'      => 'المدينة',
-            'delivery_cost'  => 'رسوم التوصيل',
+            'delivery_cost'   => 'رسوم التوصيل',
+            'payment_method'  => 'طريقة الدفع',
+            'payment_proof'   => 'إيصال التحويل',
         ];
     }
 }

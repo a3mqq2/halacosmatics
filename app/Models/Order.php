@@ -31,18 +31,26 @@ class Order extends Model
         'rejected_at',
         'rejected_reason',
         'delivery_failure_reason',
+        'cancelled_reason',
+        'cancelled_by',
+        'cancelled_at',
         'has_deposit',
         'deposit_amount',
         'deposit_payer',
         'deposit_proof',
+        'payment_method',
+        'payment_proof',
+        'delivery_included',
     ];
 
     protected function casts(): array
     {
         return [
-            'approved_at' => 'datetime',
-            'rejected_at' => 'datetime',
-            'has_deposit' => 'boolean',
+            'approved_at'      => 'datetime',
+            'rejected_at'      => 'datetime',
+            'cancelled_at'     => 'datetime',
+            'has_deposit'      => 'boolean',
+            'delivery_included'=> 'boolean',
         ];
     }
 
@@ -78,8 +86,17 @@ class Order extends Model
 
     public function getCollectionAmountAttribute(): float
     {
+        if ($this->payment_method === 'bank_transfer') {
+            return $this->delivery_included ? 0.0 : (float) $this->delivery_cost;
+        }
+
         $deposit = ($this->has_deposit && $this->deposit_amount) ? (float) $this->deposit_amount : 0.0;
         return max(0.0, (float) $this->grand_total - $deposit);
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
     }
 
     public function getStatusLabelAttribute(): string
@@ -92,6 +109,7 @@ class Order extends Model
             'returning'  => 'قيد الاسترداد',
             'returned'   => 'مسترد',
             'rejected'   => 'مرفوض',
+            'cancelled'  => 'ملغى',
             default      => $this->status,
         };
     }
@@ -106,6 +124,7 @@ class Order extends Model
             'returning'  => 'orange',
             'returned'   => 'secondary',
             'rejected'   => 'danger',
+            'cancelled'  => 'danger',
             default      => 'secondary',
         };
     }

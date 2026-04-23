@@ -28,6 +28,7 @@
             ['status' => 'delivered',  'label' => 'تم التسليم',   'icon' => 'ti-circle-check',    'color' => '#10b981', 'bg' => '#ecfdf5'],
             ['status' => 'returning',  'label' => 'قيد الاسترداد','icon' => 'ti-arrow-back-up',   'color' => '#f97316', 'bg' => '#fff7ed'],
             ['status' => 'returned',   'label' => 'مسترد',        'icon' => 'ti-package-import',  'color' => '#6b7280', 'bg' => '#f9fafb'],
+            ['status' => 'cancelled',  'label' => 'ملغى',         'icon' => 'ti-ban',             'color' => '#ef4444', 'bg' => '#fff1f2'],
         ];
     @endphp
 

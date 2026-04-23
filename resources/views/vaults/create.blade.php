@@ -29,6 +29,14 @@
                         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">كود الخزينة <span class="text-muted small fw-normal">(اختياري)</span></label>
+                        <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
+                               value="{{ old('code') }}" placeholder="مثال: BNK للخزينة المصرفية" style="text-transform:uppercase">
+                        <div class="form-text">يُستخدم الكود للتعرف على الخزينة برمجياً. مثال: BNK للخزينة المصرفية.</div>
+                        @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
                     <div class="mb-4">
                         <label class="form-label fw-semibold">الرصيد الافتتاحي</label>
                         <div class="input-group">

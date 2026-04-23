@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:orders.approve')->group(function () {
         Route::patch('orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
         Route::patch('orders/{order}/reject',  [OrderController::class, 'reject'])->name('orders.reject');
+        Route::patch('orders/{order}/cancel',  [OrderController::class, 'cancel'])->name('orders.cancel');
     });
     Route::middleware('permission:orders.deliver')->group(function () {
         Route::post('orders/{order}/dispatch',      [OrderController::class, 'dispatch'])->name('orders.dispatch');

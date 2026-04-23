@@ -22,8 +22,9 @@ Route::middleware(['auth:marketer', 'marketer.active'])->group(function () {
     Route::get('/checkout',  [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
-    Route::get('/orders',        [\App\Http\Controllers\Marketer\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [\App\Http\Controllers\Marketer\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders',             [\App\Http\Controllers\Marketer\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}',     [\App\Http\Controllers\Marketer\OrderController::class, 'show'])->name('orders.show');
+    Route::delete('/orders/{order}',  [\App\Http\Controllers\Marketer\OrderController::class, 'cancel'])->name('orders.cancel');
 
     Route::get('/reports',                  [ReportController::class, 'index'])->name('reports');
 

@@ -233,6 +233,14 @@
                                     @endif
                                 </a>
                             </li>
+
+                            <li class="side-nav-item">
+                                <a href="{{ route('orders.index', ['filter[status]' => 'cancelled']) }}"
+                                   class="side-nav-link {{ request('filter.status') === 'cancelled' ? 'active' : '' }}">
+                                    <i class="ti ti-ban me-1"></i>
+                                    <span>طلبات ملغاة</span>
+                                </a>
+                            </li>
                             @endif
 
                         </ul>

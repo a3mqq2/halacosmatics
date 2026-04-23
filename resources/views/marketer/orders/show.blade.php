@@ -6,7 +6,15 @@
 
 @section('content')
 
-<h2 class="fw-bold mb-3" style="color:#4a2619;font-size:1.1rem">طلب #{{ $order->id }}</h2>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="fw-bold mb-0" style="color:#4a2619;font-size:1.1rem">طلب #{{ $order->id }}</h2>
+    @if($order->status === 'pending')
+    <button type="button" class="btn btn-outline-danger btn-sm"
+            data-bs-toggle="modal" data-bs-target="#cancelModal">
+        <i class="ti ti-ban me-1"></i> إلغاء الطلب
+    </button>
+    @endif
+</div>
 
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-header p-0 border-bottom">
@@ -133,6 +141,26 @@
                             {{ $order->status_label }}
                         </span>
                     </div>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-muted">طريقة الدفع</span>
+                        <div class="text-end">
+                            @if($order->payment_method === 'bank_transfer')
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">تحويل مصرفي</span>
+                                <div class="small text-muted mt-1">
+                                    {{ $order->delivery_included ? 'شامل التوصيل' : 'منتجات فقط' }}
+                                </div>
+                                @if($order->payment_proof)
+                                <div class="mt-1" style="font-size:.82rem">
+                                    <a href="{{ Storage::url($order->payment_proof) }}" target="_blank" class="text-decoration-none text-primary">
+                                        <i class="ti ti-file-check me-1"></i> إيصال التحويل
+                                    </a>
+                                </div>
+                                @endif
+                            @else
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle">كاش</span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">إجمالي المنتجات</span>
                         <span>{{ number_format($order->products_total) }} د.ل</span>
@@ -146,6 +174,18 @@
                         <span>الإجمالي الكلي</span>
                         <span style="color:#4a2619">{{ number_format($order->grand_total) }} د.ل</span>
                     </div>
+                    @if($order->payment_method === 'bank_transfer')
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span style="color:#16a34a">يُستلم عند التسليم</span>
+                        <span style="color:#16a34a">{{ number_format($order->collection_amount) }} د.ل</span>
+                    </div>
+                    @if($order->delivery_included)
+                    <div class="small text-muted mt-1">التوصيل مشمول في التحويل — لا يُستلم شيء من الزبون</div>
+                    @else
+                    <div class="small text-muted mt-1">يُستلم رسم التوصيل فقط من الزبون</div>
+                    @endif
+                    @endif
                     @if($order->has_deposit && $order->deposit_amount)
                     <div class="d-flex justify-content-between mt-2 text-muted" style="font-size:.9rem">
                         <span>العربون المدفوع
@@ -182,6 +222,15 @@
                     </div>
                     <div class="small text-muted bg-danger-subtle rounded p-2">{{ $order->rejected_reason }}</div>
                     @endif
+                    @if($order->cancelled_at)
+                    <hr class="my-2">
+                    <div class="small text-danger mb-1">
+                        <i class="ti ti-ban me-1"></i> تم الإلغاء — {{ dt($order->cancelled_at) }}
+                    </div>
+                    @if($order->cancelled_reason)
+                    <div class="small text-muted bg-danger-subtle rounded p-2">{{ $order->cancelled_reason }}</div>
+                    @endif
+                    @endif
                 </div>
             </div>
 
@@ -204,5 +253,32 @@
         </div>
     </div>
 </div>
+
+@if($order->status === 'pending')
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('marketer.orders.cancel', $order) }}">
+                @csrf @method('DELETE')
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-danger" style="font-size:1rem">
+                        <i class="ti ti-ban me-1"></i> إلغاء الطلب #{{ $order->id }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted" style="font-size:.9rem">هل أنت متأكدة من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">رجوع</button>
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="ti ti-ban me-1"></i> تأكيد الإلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 
 @endsection

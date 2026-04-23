@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTOs\FailDeliveryData;
 use App\Http\Requests\AcceptReturnRequest;
 use App\Http\Requests\ApproveOrderRequest;
+use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\DeliverOrderRequest;
 use App\Http\Requests\FailDeliveryRequest;
 use App\Models\Agent;
@@ -22,14 +23,14 @@ class OrderController extends Controller
     private function resolveAllowedStatuses($user): array
     {
         if ($user->is_super) {
-            return ['pending', 'processing', 'with_agent', 'delivered', 'returning', 'returned', 'rejected'];
+            return ['pending', 'processing', 'with_agent', 'delivered', 'returning', 'returned', 'rejected', 'cancelled'];
         }
 
         $statuses = [];
         if ($user->can_access('orders.pending'))   $statuses[] = 'pending';
         if ($user->can_access('orders.active'))    array_push($statuses, 'processing', 'with_agent');
         if ($user->can_access('orders.delivered')) $statuses[] = 'delivered';
-        if ($user->can_access('orders.returned'))  array_push($statuses, 'returning', 'returned', 'rejected');
+        if ($user->can_access('orders.returned'))  array_push($statuses, 'returning', 'returned', 'rejected', 'cancelled');
 
         return $statuses;
     }
@@ -103,14 +104,22 @@ class OrderController extends Controller
                 'desc'             => 'required|string|max:500',
             ]);
 
+            if ($order->payment_method === 'bank_transfer') {
+                $mosafirProductPrice = $order->delivery_included ? 0 : (float) $order->delivery_cost;
+                $mosafirDeliveryOn   = $order->delivery_included ? 'market' : 'customer';
+            } else {
+                $mosafirProductPrice = $order->collection_amount;
+                $mosafirDeliveryOn   = 'customer';
+            }
+
             $parcel = $mosafir->createParcel([
                 'desc'             => $request->desc,
                 'customer_name'    => $request->customer_name,
                 'qty'              => $order->items->sum('quantity'),
                 'recipient_number' => $request->recipient_number,
-                'product_price'    => $order->collection_amount,
+                'product_price'    => $mosafirProductPrice,
                 'address'          => $order->address,
-                'delivery_on'      => 'customer',
+                'delivery_on'      => $mosafirDeliveryOn,
                 'to_city_id'       => $request->to_city_id,
                 'is_payment_down'  => true,
             ]);
@@ -196,6 +205,17 @@ class OrderController extends Controller
         $service->markFailedDelivery($order, $data);
 
         return back()->with('success', 'تم تسجيل تعذر التسليم وتحديث حالة الطلب إلى قيد الاسترداد.');
+    }
+
+    public function cancel(CancelOrderRequest $request, Order $order, OrderService $service)
+    {
+        if ($order->status !== 'processing') {
+            return back()->with('error', 'لا يمكن إلغاء هذا الطلب.');
+        }
+
+        $service->cancelByAdmin($order, $request->validated('cancelled_reason'));
+
+        return back()->with('success', 'تم إلغاء الطلب بنجاح وإعادة الكميات للمخزون.');
     }
 
     public function reject(Request $request, Order $order)

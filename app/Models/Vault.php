@@ -9,6 +9,7 @@ class Vault extends Model
 {
     protected $fillable = [
         'name',
+        'code',
         'opening_balance',
         'current_balance',
     ];

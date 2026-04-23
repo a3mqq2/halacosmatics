@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateVaultRequest extends FormRequest
+class CancelOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,15 +14,14 @@ class UpdateVaultRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:100',
-            'code' => 'nullable|string|max:20|unique:vaults,code,' . $this->route('vault')?->id,
+            'cancelled_reason' => 'required|string|max:500',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'اسم الخزينة مطلوب.',
+            'cancelled_reason.required' => 'يجب كتابة سبب الإلغاء.',
         ];
     }
 }

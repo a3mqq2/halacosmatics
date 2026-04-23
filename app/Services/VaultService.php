@@ -21,6 +21,7 @@ class VaultService
 
         return Vault::create([
             'name'            => $data['name'],
+            'code'            => $data['code'] ?? null,
             'opening_balance' => $opening,
             'current_balance' => $opening,
         ]);
@@ -28,7 +29,10 @@ class VaultService
 
     public function update(Vault $vault, array $data): void
     {
-        $vault->update(['name' => $data['name']]);
+        $vault->update([
+            'name' => $data['name'],
+            'code' => $data['code'] ?? null,
+        ]);
     }
 
     public function addTransaction(Vault $vault, array $data): VaultTransaction

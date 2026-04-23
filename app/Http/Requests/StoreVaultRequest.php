@@ -15,6 +15,7 @@ class StoreVaultRequest extends FormRequest
     {
         return [
             'name'            => 'required|string|max:100',
+            'code'            => 'nullable|string|max:20|unique:vaults,code',
             'opening_balance' => 'nullable|numeric|min:0',
         ];
     }

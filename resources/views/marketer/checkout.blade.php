@@ -308,8 +308,91 @@
             </div>
         </div>
 
-        {{-- ── Deposit Section ── --}}
+        {{-- ── Payment Method ── --}}
         <div class="deposit-section">
+            <div class="deposit-block-label" style="margin-bottom:12px">طريقة الدفع</div>
+            <div class="deposit-payer-options" style="margin-bottom:0">
+                <label class="deposit-payer-option" id="optCash">
+                    <input type="radio" name="payment_method" value="cash"
+                           onchange="switchPaymentMethod('cash')" checked>
+                    <i class="ti ti-cash"></i>
+                    <span>كاش</span>
+                </label>
+                <label class="deposit-payer-option" id="optBankTransfer">
+                    <input type="radio" name="payment_method" value="bank_transfer"
+                           onchange="switchPaymentMethod('bank_transfer')">
+                    <i class="ti ti-building-bank"></i>
+                    <span>تحويل مصرفي</span>
+                </label>
+            </div>
+        </div>
+
+        {{-- ── Bank Transfer Details ── --}}
+        <div id="bankTransferBox" style="display:none" class="deposit-section">
+
+            <div class="transfer-info-card mb-3">
+                <div class="transfer-info-title">
+                    <i class="ti ti-building-bank me-1"></i>
+                    يرجى إرسال التحويل إلى الحساب التالي
+                </div>
+                <div class="transfer-numbers">
+                    <div class="transfer-number-row">
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:.75rem;font-weight:700;color:#6b7280;margin-bottom:4px">مصرف التجارة والتنمية</div>
+                            <div style="font-size:.75rem;color:#6b7280;margin-bottom:6px">أيمن محمد صالحين أبوفانه</div>
+                            <div class="transfer-number" dir="ltr">0112575429001</div>
+                        </div>
+                        <button type="button" class="copy-btn" onclick="copyNumber('0112575429001', this)">
+                            <i class="ti ti-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deposit-block">
+                <div class="deposit-block-label">إيصال التحويل <span class="text-danger">*</span></div>
+                <div class="proof-upload-zone" id="paymentProofZone" onclick="document.getElementById('paymentProofInput').click()">
+                    <input type="file" name="payment_proof" id="paymentProofInput"
+                           accept=".jpg,.jpeg,.png" style="display:none"
+                           onchange="previewPaymentProof(this)">
+                    <div id="paymentProofPlaceholder">
+                        <i class="ti ti-camera-upload" style="font-size:2rem;color:#9ca3af;display:block;margin-bottom:8px"></i>
+                        <div style="font-weight:700;font-size:.9rem">ارفع صورة إيصال التحويل</div>
+                        <div style="font-size:.78rem;color:#9ca3af;margin-top:4px">JPG, PNG — حتى 5MB</div>
+                    </div>
+                    <div id="paymentProofPreview" style="display:none">
+                        <img id="paymentProofImg" style="max-height:140px;border-radius:10px;object-fit:cover">
+                        <div id="paymentProofName" style="font-size:.8rem;font-weight:700;margin-top:6px;color:#374151"></div>
+                        <button type="button" onclick="clearPaymentProof(event)"
+                                style="margin-top:6px;font-size:.75rem;color:#ef4444;background:none;border:none;cursor:pointer;font-weight:700">
+                            <i class="ti ti-x me-1"></i>إزالة
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deposit-block mt-3">
+                <div class="deposit-block-label">هل يشمل سعر التوصيل؟</div>
+                <div class="deposit-payer-options">
+                    <label class="deposit-payer-option" id="optDeliveryYes">
+                        <input type="radio" name="delivery_included" value="1"
+                               onchange="updateCollectionDisplay()" checked>
+                        <i class="ti ti-truck"></i>
+                        <span>نعم — شامل التوصيل</span>
+                    </label>
+                    <label class="deposit-payer-option" id="optDeliveryNo">
+                        <input type="radio" name="delivery_included" value="0"
+                               onchange="updateCollectionDisplay()">
+                        <i class="ti ti-package"></i>
+                        <span>لا — المنتجات فقط</span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- ── Deposit Section (cash only) ── --}}
+        <div id="depositSection" class="deposit-section">
 
             <div class="deposit-toggle-row">
                 <div>
@@ -410,6 +493,7 @@
 
             </div>
         </div>
+        </div>{{-- end depositSection --}}
 
         <button type="submit" class="btn-place-order mt-3" id="placeOrderBtn">
             <i class="ti ti-send me-1"></i> إرسال الطلب
@@ -500,6 +584,90 @@
         }
     }
 
+    // ── Payment Method ───────────────────────────────────────────
+    function switchPaymentMethod(value) {
+        const bankBox      = document.getElementById('bankTransferBox');
+        const depositSec   = document.getElementById('depositSection');
+        const optCash      = document.getElementById('optCash');
+        const optBank      = document.getElementById('optBankTransfer');
+        const paymentProof = document.getElementById('paymentProofInput');
+
+        document.querySelectorAll('.deposit-payer-option[id^="opt"]').forEach(el => {
+            if (el.id === 'optCash' || el.id === 'optBankTransfer') el.classList.remove('selected');
+        });
+
+        if (value === 'bank_transfer') {
+            bankBox.style.display    = '';
+            depositSec.style.display = 'none';
+            optBank.classList.add('selected');
+            paymentProof.setAttribute('required', '');
+            document.getElementById('hasDeposit').checked = false;
+            toggleDeposit(false);
+            updateCollectionDisplay();
+        } else {
+            bankBox.style.display    = 'none';
+            depositSec.style.display = '';
+            optCash.classList.add('selected');
+            paymentProof.removeAttribute('required');
+            clearPaymentProof();
+            updateDepositTotal();
+        }
+    }
+
+    function updateCollectionDisplay() {
+        const delivCost     = parseFloat(document.getElementById('hiddenDeliveryCost').value) || 0;
+        const base          = {{ $cart['total'] }};
+        const grand         = base + delivCost;
+        const included      = document.querySelector('[name=delivery_included]:checked')?.value === '1';
+        const collectionRow = document.getElementById('collectionRow');
+        const collectionEl  = document.getElementById('collectionAmount');
+
+        grandTotalEl.textContent = grand.toLocaleString('ar') + ' د.ل';
+
+        if (! included && delivCost > 0) {
+            collectionEl.textContent    = delivCost.toLocaleString('ar') + ' د.ل';
+            collectionRow.style.display = '';
+        } else if (included) {
+            collectionEl.textContent    = '0 د.ل';
+            collectionRow.style.display = '';
+        } else {
+            collectionRow.style.display = 'none';
+        }
+    }
+
+    function previewPaymentProof(input) {
+        if (! input.files[0]) return;
+        const file = input.files[0];
+        const zone = document.getElementById('paymentProofZone');
+        const img  = document.getElementById('paymentProofImg');
+        const name = document.getElementById('paymentProofName');
+        const reader = new FileReader();
+        reader.onload = e => {
+            img.src = e.target.result;
+            name.textContent = file.name;
+            document.getElementById('paymentProofPlaceholder').style.display = 'none';
+            document.getElementById('paymentProofPreview').style.display     = '';
+            zone.classList.add('has-file');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearPaymentProof(e) {
+        if (e) e.stopPropagation();
+        const input = document.getElementById('paymentProofInput');
+        if (input) input.value = '';
+        const zone = document.getElementById('paymentProofZone');
+        if (! zone) return;
+        zone.classList.remove('has-file');
+        document.getElementById('paymentProofPlaceholder').style.display = '';
+        document.getElementById('paymentProofPreview').style.display     = 'none';
+        document.getElementById('paymentProofImg').src                   = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        switchPaymentMethod('cash');
+    });
+
     // ── Deposit ──────────────────────────────────────────────────
     function toggleDeposit(on) {
         document.getElementById('depositDetails').style.display = on ? '' : 'none';
@@ -588,11 +756,16 @@
         });
     }
 
-    // Sync deposit total with delivery changes
+    // Sync totals with delivery changes
     const origUpdateDelivery = updateDelivery;
     updateDelivery = function(price, cityId, cityName, subCityId, subCityName) {
         origUpdateDelivery(price, cityId, cityName, subCityId, subCityName);
-        updateDepositTotal();
+        const method = document.querySelector('[name=payment_method]:checked')?.value;
+        if (method === 'bank_transfer') {
+            updateCollectionDisplay();
+        } else {
+            updateDepositTotal();
+        }
     };
 </script>
 @endpush

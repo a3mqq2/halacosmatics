@@ -27,6 +27,7 @@ class DashboardService
             'ordersDelivered'  => Order::where('status', 'delivered')->count(),
             'ordersReturning'  => Order::where('status', 'returning')->count(),
             'ordersReturned'   => Order::where('status', 'returned')->count(),
+            'ordersCancelled'  => Order::where('status', 'cancelled')->count(),
 
             'totalAgents'      => Agent::count(),
             'totalUsers'       => User::count(),
