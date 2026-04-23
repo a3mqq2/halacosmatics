@@ -606,7 +606,6 @@
             bankBox.style.display    = '';
             depositSec.style.display = 'none';
             optBank.classList.add('selected');
-            paymentProof.setAttribute('required', '');
             document.getElementById('hasDeposit').checked = false;
             toggleDeposit(false);
             updateCollectionDisplay();
@@ -614,7 +613,6 @@
             bankBox.style.display    = 'none';
             depositSec.style.display = '';
             optCash.classList.add('selected');
-            paymentProof.removeAttribute('required');
             clearPaymentProof();
             updateDepositTotal();
         }
@@ -647,6 +645,8 @@
         const zone = document.getElementById('paymentProofZone');
         const img  = document.getElementById('paymentProofImg');
         const name = document.getElementById('paymentProofName');
+        zone.style.borderColor = '';
+        zone.style.background  = '';
         const reader = new FileReader();
         reader.onload = e => {
             img.src = e.target.result;
@@ -672,6 +672,20 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         switchPaymentMethod('cash');
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            const method = document.querySelector('[name=payment_method]:checked')?.value;
+            if (method === 'bank_transfer') {
+                const proofInput = document.getElementById('paymentProofInput');
+                if (!proofInput.files || !proofInput.files.length) {
+                    e.preventDefault();
+                    const zone = document.getElementById('paymentProofZone');
+                    zone.style.borderColor = '#ef4444';
+                    zone.style.background  = '#fff5f5';
+                    zone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
     });
 
     // ── Deposit ──────────────────────────────────────────────────
