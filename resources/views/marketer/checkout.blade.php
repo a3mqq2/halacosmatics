@@ -381,14 +381,12 @@
                 <div class="deposit-block-label">هل يشمل سعر التوصيل؟</div>
                 <div class="deposit-payer-options">
                     <label class="deposit-payer-option" id="optDeliveryYes">
-                        <input type="radio" name="delivery_included" value="1"
-                               onchange="updateCollectionDisplay()" checked>
+                        <input type="radio" name="delivery_included" value="1" checked>
                         <i class="ti ti-truck"></i>
                         <span>نعم — شامل التوصيل</span>
                     </label>
                     <label class="deposit-payer-option" id="optDeliveryNo">
-                        <input type="radio" name="delivery_included" value="0"
-                               onchange="updateCollectionDisplay()">
+                        <input type="radio" name="delivery_included" value="0">
                         <i class="ti ti-package"></i>
                         <span>لا — المنتجات فقط</span>
                     </label>
@@ -628,11 +626,8 @@
 
         grandTotalEl.textContent = grand.toLocaleString('ar') + ' د.ل';
 
-        if (! included && delivCost > 0) {
+        if (!included && delivCost > 0) {
             collectionEl.textContent    = delivCost.toLocaleString('ar') + ' د.ل';
-            collectionRow.style.display = '';
-        } else if (included) {
-            collectionEl.textContent    = '0 د.ل';
             collectionRow.style.display = '';
         } else {
             collectionRow.style.display = 'none';
@@ -672,6 +667,10 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         switchPaymentMethod('cash');
+
+        document.querySelectorAll('[name=delivery_included]').forEach(radio => {
+            radio.addEventListener('change', updateCollectionDisplay);
+        });
 
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
             const method = document.querySelector('[name=payment_method]:checked')?.value;
