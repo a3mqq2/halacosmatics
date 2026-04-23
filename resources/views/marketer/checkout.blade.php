@@ -342,9 +342,15 @@
                             <div style="font-size:.75rem;color:#6b7280;margin-bottom:6px">أيمن محمد صالحين أبوفانه</div>
                             <div class="transfer-number" dir="ltr">0112575429001</div>
                         </div>
-                        <button type="button" class="copy-btn" onclick="copyNumber('0112575429001', this)">
-                            <i class="ti ti-copy"></i>
-                        </button>
+                        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+                            <button type="button" class="copy-btn" onclick="copyNumber('0112575429001', this)" title="نسخ رقم الحساب">
+                                <i class="ti ti-copy"></i>
+                            </button>
+                            <button type="button" class="copy-btn" onclick="shareWhatsApp()" title="إرسال عبر واتساب"
+                                    style="background:#dcfce7;border-color:#86efac;color:#15803d">
+                                <i class="ti ti-brand-whatsapp"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -743,6 +749,11 @@
         document.getElementById('proofPlaceholder').style.display = '';
         document.getElementById('proofPreview').style.display = 'none';
         document.getElementById('proofImg').src = '';
+    }
+
+    function shareWhatsApp() {
+        const msg = `نقبل التعامل بالكاش وخدمة تحويل مصرفي بنفس سعر الكاش 💸\n\n📋 بيانات التحويل المصرفي:\n\nمصرف التجارة والتنمية\nاسم صاحب الحساب: أيمن محمد صالحين أبوفانه\nرقم الحساب: 0112575429001\n\n📸 ملاحظة مهمة:\nأي تحويل ضروري يتم إرسال سكرين شوت للفاتورة`;
+        window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     }
 
     function copyNumber(number, btn) {
