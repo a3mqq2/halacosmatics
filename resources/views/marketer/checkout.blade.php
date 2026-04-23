@@ -343,7 +343,7 @@
                             <div class="transfer-number" dir="ltr">0112575429001</div>
                         </div>
                         <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-                            <button type="button" class="copy-btn" onclick="copyNumber('0112575429001', this)" title="نسخ رقم الحساب">
+                            <button type="button" class="copy-btn" onclick="copyBankMessage(this)" title="نسخ الرسالة كاملة">
                                 <i class="ti ti-copy"></i>
                             </button>
                             <button type="button" class="copy-btn" onclick="shareWhatsApp()" title="إرسال عبر واتساب"
@@ -751,9 +751,21 @@
         document.getElementById('proofImg').src = '';
     }
 
+    const bankMsg = `نقبل التعامل بالكاش وخدمة تحويل مصرفي بنفس سعر الكاش 💸\n\n📋 بيانات التحويل المصرفي:\n\nمصرف التجارة والتنمية\nاسم صاحب الحساب: أيمن محمد صالحين أبوفانه\nرقم الحساب: 0112575429001\n\n📸 ملاحظة مهمة:\nأي تحويل ضروري يتم إرسال سكرين شوت للفاتورة`;
+
+    function copyBankMessage(btn) {
+        navigator.clipboard.writeText(bankMsg).then(() => {
+            btn.classList.add('copied');
+            btn.innerHTML = '<i class="ti ti-check"></i>';
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = '<i class="ti ti-copy"></i>';
+            }, 2000);
+        });
+    }
+
     function shareWhatsApp() {
-        const msg = `نقبل التعامل بالكاش وخدمة تحويل مصرفي بنفس سعر الكاش 💸\n\n📋 بيانات التحويل المصرفي:\n\nمصرف التجارة والتنمية\nاسم صاحب الحساب: أيمن محمد صالحين أبوفانه\nرقم الحساب: 0112575429001\n\n📸 ملاحظة مهمة:\nأي تحويل ضروري يتم إرسال سكرين شوت للفاتورة`;
-        window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        window.open('https://wa.me/?text=' + encodeURIComponent(bankMsg), '_blank');
     }
 
     function copyNumber(number, btn) {
