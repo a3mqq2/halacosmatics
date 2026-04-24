@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'dashboard');
 
-Route::middleware('guest')->group(function () {
+Route::middleware('guest:web,marketer')->group(function () {
     Route::get('/login',  [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register/marketer', [MarketerController::class, 'register'])->name('marketers.register');

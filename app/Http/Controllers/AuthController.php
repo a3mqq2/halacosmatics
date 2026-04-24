@@ -40,7 +40,18 @@ class AuthController extends Controller
         if ($redirect) {
             RateLimiter::clear($key);
             $request->session()->regenerate();
-            return redirect()->intended($redirect);
+
+            $intended        = $request->session()->pull('url.intended');
+            $isMarketerLogin = str_contains($redirect, 'marketer');
+
+            if ($intended) {
+                $isMarketerUrl = str_starts_with($intended, url('/marketer'));
+                if ($isMarketerLogin === $isMarketerUrl) {
+                    return redirect($intended);
+                }
+            }
+
+            return redirect($redirect);
         }
 
         RateLimiter::hit($key, 60);
@@ -58,7 +69,8 @@ class AuthController extends Controller
 
     public function logout()
     {
-        auth()->logout();
+        $guard = auth('marketer')->check() ? 'marketer' : 'web';
+        auth($guard)->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 

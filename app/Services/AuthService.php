@@ -94,9 +94,7 @@ class AuthService
     {
         Log::channel('single')->info('[AUTH][MARKETER] البحث عن مسوق', ['phone_last9' => $last9]);
 
-        $marketer = Marketer::where('phone', 'like', '%' . $last9)
-            ->select('id', 'phone', 'password', 'status', 'is_active')
-            ->first();
+        $marketer = Marketer::where('phone', 'like', '%' . $last9)->first();
 
         if (!$marketer) {
             Log::channel('single')->info('[AUTH][MARKETER] لم يوجد مسوق بهذا الرقم في جدول marketers', ['phone_last9' => $last9]);
