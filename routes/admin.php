@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\DeliveryAreaController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VaultController;
 use App\Http\Controllers\VaultTransactionController;
@@ -72,6 +73,8 @@ Route::middleware('auth')->group(function () {
         Route::get('vaults/{vault}/transactions',  [VaultTransactionController::class, 'index'])->name('vaults.transactions.index');
         Route::post('vaults/{vault}/transactions', [VaultTransactionController::class, 'store'])->name('vaults.transactions.store');
     });
+
+    Route::resource('delivery_areas', DeliveryAreaController::class)->except(['show']);
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index')->middleware('permission:reports');
 

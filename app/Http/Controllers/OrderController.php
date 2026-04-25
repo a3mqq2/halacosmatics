@@ -75,7 +75,7 @@ class OrderController extends Controller
             }
         }
 
-        $order->load(['marketer', 'items.product', 'logs', 'approvedBy', 'rejectedBy', 'agent']);
+        $order->load(['marketer', 'items.product', 'logs', 'approvedBy', 'rejectedBy', 'agent', 'localArea']);
         $agents = Agent::where('is_active', true)->orderBy('name')->get();
         $cities = $mosafir->getPrices() ?? [];
 
@@ -97,6 +97,10 @@ class OrderController extends Controller
         $type = $request->input('type');
 
         if ($type === 'mosafir') {
+            if ($order->delivery_type === 'local') {
+                return back()->with('error', 'طلبات التوصيل المحلي لا يمكن إحالتها لشركة المسافر.');
+            }
+
             $request->validate([
                 'customer_name'    => 'required|string|max:100',
                 'recipient_number' => 'required|string|max:20',

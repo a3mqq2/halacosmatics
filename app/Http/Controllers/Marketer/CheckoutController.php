@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Marketer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Marketer\CheckoutRequest;
+use App\Models\DeliveryArea;
 use App\Services\CartService;
 use App\Services\MosafirClient;
 use App\Services\OrderService;
@@ -26,9 +27,10 @@ class CheckoutController extends Controller
             return redirect()->route('marketer.cart');
         }
 
-        $cities = $this->mosafirClient->getPrices() ?? [];
+        $cities     = $this->mosafirClient->getPrices() ?? [];
+        $localAreas = DeliveryArea::orderBy('price')->orderBy('name')->get();
 
-        return view('marketer.checkout', compact('cart', 'cities'));
+        return view('marketer.checkout', compact('cart', 'cities', 'localAreas'));
     }
 
     public function store(CheckoutRequest $request)
@@ -41,6 +43,9 @@ class CheckoutController extends Controller
         }
 
         $data = $request->validated();
+        if ($request->hasFile('payment_proof')) {
+            $data['payment_proof'] = $request->file('payment_proof');
+        }
         if ($request->hasFile('deposit_proof')) {
             $data['deposit_proof'] = $request->file('deposit_proof');
         }

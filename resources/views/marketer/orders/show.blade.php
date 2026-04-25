@@ -165,6 +165,23 @@
                         <span class="text-muted">إجمالي المنتجات</span>
                         <span>{{ number_format($order->products_total) }} د.ل</span>
                     </div>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-muted">نوع التوصيل</span>
+                        <div class="text-end">
+                            @if($order->delivery_type === 'local')
+                                <span class="badge bg-info-subtle text-info border border-info-subtle">
+                                    <i class="ti ti-map-pin me-1"></i> محلي — بنغازي
+                                </span>
+                                @if($order->localArea)
+                                <div class="small text-muted mt-1">{{ $order->localArea->name }}</div>
+                                @endif
+                            @else
+                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">
+                                    <i class="ti ti-truck-delivery me-1"></i> شركة المسافر
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">رسوم التوصيل</span>
                         <span>{{ number_format($order->delivery_cost) }} د.ل</span>

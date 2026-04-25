@@ -295,6 +295,23 @@
                         </dd>
                     </div>
                     <div class="info-row">
+                        <dt>نوع التوصيل</dt>
+                        <dd>
+                            @if($order->delivery_type === 'local')
+                                <span class="badge bg-info-subtle text-info border border-info-subtle">
+                                    <i class="ti ti-map-pin me-1"></i> محلي — بنغازي
+                                </span>
+                                @if($order->localArea)
+                                    <span class="text-muted ms-2" style="font-size:.88rem">{{ $order->localArea->name }}</span>
+                                @endif
+                            @else
+                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">
+                                    <i class="ti ti-truck-delivery me-1"></i> شركة المسافر
+                                </span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="info-row">
                         <dt>رسوم التوصيل</dt>
                         <dd>{{ number_format($order->delivery_cost) }} د.ل</dd>
                     </div>
@@ -489,7 +506,8 @@
 
                 <div class="row g-3" id="dispatchOptions">
 
-                    {{-- Musafir Option --}}
+                    {{-- Musafir Option — hidden for local delivery orders --}}
+                    @if($order->delivery_type !== 'local')
                     <div class="col-12 col-sm-6">
                         <div class="dispatch-card" onclick="selectDispatch('mosafir')" id="card-mosafir">
                             <img src="{{ asset('mosafer.svg') }}" alt="المسافر" class="dispatch-logo mb-3">
@@ -497,9 +515,17 @@
                             <div class="text-muted small mt-1">إنشاء شحنة تلقائياً عبر API المسافر</div>
                         </div>
                     </div>
+                    @else
+                    <div class="col-12">
+                        <div class="alert alert-info py-2 px-3 mb-0 rounded-3" style="font-size:.88rem">
+                            <i class="ti ti-map-pin me-1"></i>
+                            طلب توصيل محلي داخل بنغازي — يُحال للمندوب المحلي فقط
+                        </div>
+                    </div>
+                    @endif
 
                     {{-- Local Agent Option --}}
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 {{ $order->delivery_type !== 'local' ? 'col-sm-6' : '' }}">
                         <div class="dispatch-card" onclick="selectDispatch('agent')" id="card-agent">
                             <i class="ti ti-motorbike dispatch-icon mb-3"></i>
                             <div class="fw-bold fs-6">مندوب محلي</div>

@@ -306,6 +306,14 @@
                 </li>
                 @endif
 
+                <li class="side-nav-item">
+                    <a href="{{ route('delivery_areas.index') }}"
+                       class="side-nav-link {{ request()->routeIs('delivery_areas.*') ? 'active' : '' }}">
+                        <span class="menu-icon"><i class="ti ti-map-pin"></i></span>
+                        <span class="menu-text">مناطق التوصيل</span>
+                    </a>
+                </li>
+
                 @if(Auth::user()->can_access('reports'))
                 <li class="side-nav-item">
                     <a href="{{ route('reports.index') }}"

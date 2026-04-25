@@ -23,8 +23,10 @@ class OrderService
             $productsTotal = collect($cartItems)->sum(fn($item) => $item->quantity * (float) $item->selling_price);
             $deliveryCost  = (float) ($data['delivery_cost'] ?? 0);
 
-            $paymentMethod   = $data['payment_method'] ?? 'cash';
+            $paymentMethod    = $data['payment_method'] ?? 'cash';
             $deliveryIncluded = $paymentMethod === 'bank_transfer' && ! empty($data['delivery_included']);
+            $deliveryType     = $data['delivery_type'] ?? 'mosafir';
+            $localAreaId      = $deliveryType === 'local' ? ($data['local_area_id'] ?? null) : null;
 
             $paymentProof = null;
             if ($paymentMethod === 'bank_transfer' && isset($data['payment_proof']) && $data['payment_proof'] instanceof UploadedFile) {
@@ -55,6 +57,8 @@ class OrderService
                 'payment_method'   => $paymentMethod,
                 'payment_proof'    => $paymentProof,
                 'delivery_included'=> $deliveryIncluded,
+                'delivery_type'    => $deliveryType,
+                'local_area_id'    => $localAreaId,
                 'has_deposit'      => $hasDeposit,
                 'deposit_amount'   => $hasDeposit ? ($data['deposit_amount'] ?? null) : null,
                 'deposit_payer'    => $hasDeposit ? ($data['deposit_payer'] ?? null) : null,

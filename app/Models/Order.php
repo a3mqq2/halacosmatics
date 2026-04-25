@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\DeliveryArea;
 
 class Order extends Model
 {
@@ -41,6 +42,8 @@ class Order extends Model
         'payment_method',
         'payment_proof',
         'delivery_included',
+        'delivery_type',
+        'local_area_id',
     ];
 
     protected function casts(): array
@@ -97,6 +100,11 @@ class Order extends Model
     public function cancelledBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    public function localArea(): BelongsTo
+    {
+        return $this->belongsTo(DeliveryArea::class, 'local_area_id');
     }
 
     public function getStatusLabelAttribute(): string

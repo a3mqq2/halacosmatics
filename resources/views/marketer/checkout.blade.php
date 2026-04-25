@@ -212,13 +212,27 @@
 
 <h2 class="page-title">إتمام الطلب</h2>
 
+@if($errors->any())
+<div class="alert alert-danger rounded-3 mb-3 py-2 px-3" style="font-size:.9rem">
+    <i class="ti ti-alert-circle me-1"></i>
+    <strong>يرجى مراجعة البيانات:</strong>
+    <ul class="mb-0 mt-1 ps-3">
+        @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 <form method="POST" action="{{ route('marketer.checkout.store') }}" id="checkoutForm" enctype="multipart/form-data">
 @csrf
-<input type="hidden" name="city_id"       id="hiddenCityId">
-<input type="hidden" name="city_name"     id="hiddenCityName">
-<input type="hidden" name="sub_city_id"   id="hiddenSubCityId">
-<input type="hidden" name="sub_city_name" id="hiddenSubCityName">
-<input type="hidden" name="delivery_cost" id="hiddenDeliveryCost" value="0">
+<input type="hidden" name="delivery_type"  id="hiddenDeliveryType" value="local">
+<input type="hidden" name="local_area_id"  id="hiddenLocalAreaId">
+<input type="hidden" name="city_id"        id="hiddenCityId">
+<input type="hidden" name="city_name"      id="hiddenCityName">
+<input type="hidden" name="sub_city_id"    id="hiddenSubCityId">
+<input type="hidden" name="sub_city_name"  id="hiddenSubCityName">
+<input type="hidden" name="delivery_cost"  id="hiddenDeliveryCost" value="0">
 
 <div class="checkout-wrap">
 
@@ -229,20 +243,53 @@
         <div class="row g-3">
             <div class="col-12">
                 <label class="form-label">اسم الزبون</label>
-                <input type="text" name="customer_name" id="customerName" class="form-control" placeholder="الاسم الكامل">
+                <input type="text" name="customer_name" id="customerName" class="form-control" placeholder="الاسم الكامل" value="{{ old('customer_name') }}">
             </div>
 
             <div class="col-12 col-sm-6">
                 <label class="form-label">رقم الهاتف</label>
-                <input type="text" name="customer_phone" id="customerPhone" class="form-control" placeholder="09XXXXXXXX" dir="ltr">
+                <input type="text" name="customer_phone" id="customerPhone" class="form-control" placeholder="09XXXXXXXX" dir="ltr" value="{{ old('customer_phone') }}">
             </div>
 
             <div class="col-12 col-sm-6">
                 <label class="form-label">رقم هاتف احتياطي <span class="text-muted small">(اختياري)</span></label>
-                <input type="text" name="customer_phone2" id="customerPhone2" class="form-control" placeholder="09XXXXXXXX" dir="ltr">
+                <input type="text" name="customer_phone2" id="customerPhone2" class="form-control" placeholder="09XXXXXXXX" dir="ltr" value="{{ old('customer_phone2') }}">
             </div>
 
+            {{-- ── Delivery Type Selector ── --}}
             <div class="col-12">
+                <label class="form-label">نوع التوصيل</label>
+                <div class="deposit-payer-options">
+                    <label class="deposit-payer-option" id="optLocal">
+                        <input type="radio" name="_delivery_type_ui" value="local" checked>
+                        <i class="ti ti-map-pin"></i>
+                        <span>بنغازي وضواحيها</span>
+                    </label>
+                    <label class="deposit-payer-option" id="optMosafir">
+                        <input type="radio" name="_delivery_type_ui" value="mosafir">
+                        <img src="{{ asset('mosafer.svg') }}" style="height:16px"> خارج بنغازي
+                    </label>
+                </div>
+            </div>
+
+            {{-- ── Local Areas (بنغازي) ── --}}
+            <div class="col-12" id="localBox">
+                <label class="form-label">المنطقة</label>
+                <select id="localAreaSelect">
+                    <option value="">-- اختر المنطقة --</option>
+                    @foreach($localAreas as $area)
+                        <option value="{{ $area->id }}"
+                                data-price="{{ $area->price }}"
+                                data-name="{{ $area->name }}">
+                            {{ $area->name }} — {{ $area->price }} د.ل
+                        </option>
+                    @endforeach
+                </select>
+                <div id="localAreaError" style="color:#ef4444;font-size:.82rem;margin-top:4px;display:none">يرجى اختيار المنطقة</div>
+            </div>
+
+            {{-- ── Mosafir Cities (خارج بنغازي) ── --}}
+            <div class="col-12" id="mosafirBox" style="display:none">
                 <label class="form-label">المدينة</label>
                 <select id="parentCity">
                     <option value="">-- اختر المدينة --</option>
@@ -254,6 +301,7 @@
                         </option>
                     @endforeach
                 </select>
+                <div id="mosafirCityError" style="color:#ef4444;font-size:.82rem;margin-top:4px;display:none">يرجى اختيار المدينة</div>
             </div>
 
             <div class="col-12" id="subCityWrap" style="display:none">
@@ -265,12 +313,12 @@
 
             <div class="col-12">
                 <label class="form-label">العنوان التفصيلي</label>
-                <input type="text" name="address" id="customerAddress" class="form-control" placeholder="الشارع، المبنى...">
+                <input type="text" name="address" id="customerAddress" class="form-control" placeholder="الشارع، المبنى..." value="{{ old('address') }}">
             </div>
 
             <div class="col-12">
                 <label class="form-label">ملاحظات <span class="text-muted small">(اختياري)</span></label>
-                <textarea name="notes" id="orderNotes" class="form-control" rows="3" placeholder="أي تعليمات إضافية للتوصيل..."></textarea>
+                <textarea name="notes" id="orderNotes" class="form-control" rows="3" placeholder="أي تعليمات إضافية للتوصيل...">{{ old('notes') }}</textarea>
             </div>
         </div>
     </div>
@@ -518,46 +566,61 @@
 <script>
     const productTotal  = {{ $cart['total'] }};
     const deliveryRow   = document.getElementById('deliveryRow');
-    const deliveryCost  = document.getElementById('deliveryCost');
+    const deliveryCostEl = document.getElementById('deliveryCost');
     const grandTotalEl  = document.getElementById('grandTotal');
     const subCityWrap   = document.getElementById('subCityWrap');
 
     const tsOptions = {
         placeholder: 'ابحث أو اختر...',
         searchField: ['text'],
-        render: {
-            no_results: () => '<div class="no-results">لا توجد نتائج</div>',
-        },
+        render: { no_results: () => '<div class="no-results">لا توجد نتائج</div>' },
     };
 
+    // ── Local Areas TomSelect ────────────────────────────────────
+    const localAreaTS = new TomSelect('#localAreaSelect', {
+        ...tsOptions,
+        onChange(value) {
+            const opt = document.querySelector(`#localAreaSelect option[value="${value}"]`);
+            if (!opt || !value) {
+                setDeliveryCost(0);
+                document.getElementById('hiddenLocalAreaId').value = '';
+                document.getElementById('hiddenCityName').value    = '';
+                return;
+            }
+            document.getElementById('localAreaError').style.display = 'none';
+            document.getElementById('hiddenLocalAreaId').value = value;
+            document.getElementById('hiddenCityName').value    = opt.dataset.name;
+            setDeliveryCost(parseFloat(opt.dataset.price || 0));
+        },
+    });
+
+    // ── Mosafir TomSelect ────────────────────────────────────────
     const parentTS = new TomSelect('#parentCity', {
         ...tsOptions,
         onChange(value) {
             const opt = document.querySelector(`#parentCity option[value="${value}"]`);
-
-            if (subTS) {
-                subTS.clear();
-                subTS.clearOptions();
-                subTS.addOption({ value: '', text: '-- اختر المنطقة --' });
-            }
-
+            if (subTS) { subTS.clear(); subTS.clearOptions(); subTS.addOption({ value: '', text: '-- اختر المنطقة --' }); }
             subCityWrap.style.display = 'none';
-            updateDelivery(0, '', '', '', '');
-
-            if (! opt || ! value) return;
-
+            document.getElementById('hiddenCityId').value   = '';
+            document.getElementById('hiddenCityName').value = '';
+            setDeliveryCost(0);
+            if (!opt || !value) return;
             const subCities  = JSON.parse(opt.dataset.sub || '[]');
             const parentName = opt.text.split(' — ')[0].trim();
-
+            document.getElementById('mosafirCityError').style.display = 'none';
             if (subCities.length > 0) {
                 subCities.forEach(sub => {
                     subTS.addOption({ value: String(sub.id), text: sub.name + ' — ' + sub.price + ' د.ل', price: sub.price, name: sub.name, parentId: value, parentName });
                 });
                 subTS.refreshOptions(false);
                 subCityWrap.style.display = '';
-                updateDelivery(0, value, parentName, '', '');
+                document.getElementById('hiddenCityId').value   = value;
+                document.getElementById('hiddenCityName').value = parentName;
+                setDeliveryCost(0);
             } else {
-                updateDelivery(parseFloat(opt.dataset.price || 0), value, parentName, '', '');
+                document.getElementById('hiddenCityId').value   = value;
+                document.getElementById('hiddenCityName').value = parentName;
+                setDeliveryCost(parseFloat(opt.dataset.price || 0));
             }
         },
     });
@@ -565,26 +628,92 @@
     const subTS = new TomSelect('#subCity', {
         ...tsOptions,
         onChange(value) {
-            if (! value) { updateDelivery(0, '', '', '', ''); return; }
+            if (!value) {
+                document.getElementById('hiddenSubCityId').value   = '';
+                document.getElementById('hiddenSubCityName').value = '';
+                setDeliveryCost(0);
+                return;
+            }
             const opt = subTS.options[value];
-            updateDelivery(parseFloat(opt?.price || 0), opt?.parentId ?? '', opt?.parentName ?? '', value, opt?.name ?? '');
+            document.getElementById('hiddenSubCityId').value   = value;
+            document.getElementById('hiddenSubCityName').value = opt?.name ?? '';
+            setDeliveryCost(parseFloat(opt?.price || 0));
         },
     });
 
-    function updateDelivery(price, cityId, cityName, subCityId, subCityName) {
-        document.getElementById('hiddenDeliveryCost').value = price   ?? 0;
-        document.getElementById('hiddenCityId').value       = cityId  ?? '';
-        document.getElementById('hiddenCityName').value     = cityName ?? '';
-        document.getElementById('hiddenSubCityId').value    = subCityId   ?? '';
-        document.getElementById('hiddenSubCityName').value  = subCityName ?? '';
-
+    // ── Delivery cost setter ─────────────────────────────────────
+    function setDeliveryCost(price) {
+        document.getElementById('hiddenDeliveryCost').value = price ?? 0;
         if (price > 0) {
-            deliveryCost.textContent  = price.toLocaleString('ar') + ' د.ل';
-            deliveryRow.style.display = '';
-            grandTotalEl.textContent  = (productTotal + price).toLocaleString('ar') + ' د.ل';
+            deliveryCostEl.textContent = price.toLocaleString('ar') + ' د.ل';
+            deliveryRow.style.display  = '';
+            grandTotalEl.textContent   = (productTotal + price).toLocaleString('ar') + ' د.ل';
         } else {
-            deliveryRow.style.display = 'none';
-            grandTotalEl.textContent  = productTotal.toLocaleString('ar') + ' د.ل';
+            deliveryRow.style.display  = 'none';
+            grandTotalEl.textContent   = productTotal.toLocaleString('ar') + ' د.ل';
+        }
+        const method = document.querySelector('[name=payment_method]:checked')?.value;
+        if (method === 'bank_transfer') updateCollectionDisplay();
+        else updateDepositTotal();
+    }
+
+    // ── Delivery Type Switch ─────────────────────────────────────
+    function switchDeliveryType(type) {
+        const localBox   = document.getElementById('localBox');
+        const mosafirBox = document.getElementById('mosafirBox');
+        const optLocal   = document.getElementById('optLocal');
+        const optMosafir = document.getElementById('optMosafir');
+
+        document.getElementById('hiddenDeliveryType').value = type;
+
+        if (type === 'local') {
+            localBox.style.display   = '';
+            mosafirBox.style.display = 'none';
+            subCityWrap.style.display = 'none';
+            optLocal.classList.add('selected');
+            optMosafir.classList.remove('selected');
+            // reset Mosafir fields
+            document.getElementById('hiddenCityId').value      = '';
+            document.getElementById('hiddenSubCityId').value   = '';
+            document.getElementById('hiddenSubCityName').value = '';
+            if (parentTS) { parentTS.clear(); }
+            if (subTS)    { subTS.clear(); subTS.clearOptions(); }
+            // restore local area price if already selected
+            const localVal = localAreaTS?.getValue();
+            if (localVal) {
+                const opt = document.querySelector(`#localAreaSelect option[value="${localVal}"]`);
+                if (opt) {
+                    document.getElementById('hiddenLocalAreaId').value = localVal;
+                    document.getElementById('hiddenCityName').value    = opt.dataset.name;
+                    setDeliveryCost(parseFloat(opt.dataset.price || 0));
+                    return;
+                }
+            }
+            setDeliveryCost(0);
+        } else {
+            localBox.style.display   = 'none';
+            mosafirBox.style.display = '';
+            optMosafir.classList.add('selected');
+            optLocal.classList.remove('selected');
+            // reset local fields
+            document.getElementById('hiddenLocalAreaId').value = '';
+            if (localAreaTS) localAreaTS.clear();
+            // restore Mosafir price if already selected
+            const parentVal = parentTS?.getValue();
+            if (parentVal) {
+                const opt = document.querySelector(`#parentCity option[value="${parentVal}"]`);
+                if (opt) {
+                    const subVal = subTS?.getValue();
+                    if (subVal) {
+                        const subOpt = subTS.options[subVal];
+                        setDeliveryCost(parseFloat(subOpt?.price || 0));
+                    } else {
+                        setDeliveryCost(parseFloat(opt.dataset.price || 0));
+                    }
+                    return;
+                }
+            }
+            setDeliveryCost(0);
         }
     }
 
@@ -667,12 +796,36 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         switchPaymentMethod('cash');
+        switchDeliveryType('local');
+
+        document.querySelectorAll('[name=_delivery_type_ui]').forEach(radio => {
+            radio.addEventListener('change', () => switchDeliveryType(radio.value));
+        });
 
         document.querySelectorAll('[name=delivery_included]').forEach(radio => {
             radio.addEventListener('change', updateCollectionDisplay);
         });
 
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            let firstError = null;
+            const delivType = document.getElementById('hiddenDeliveryType').value;
+
+            if (delivType === 'local') {
+                if (!document.getElementById('hiddenLocalAreaId').value) {
+                    e.preventDefault();
+                    const errEl = document.getElementById('localAreaError');
+                    errEl.style.display = '';
+                    firstError = errEl;
+                }
+            } else {
+                if (!document.getElementById('hiddenCityId').value) {
+                    e.preventDefault();
+                    const errEl = document.getElementById('mosafirCityError');
+                    errEl.style.display = '';
+                    firstError = errEl;
+                }
+            }
+
             const method = document.querySelector('[name=payment_method]:checked')?.value;
             if (method === 'bank_transfer') {
                 const proofInput = document.getElementById('paymentProofInput');
@@ -681,9 +834,11 @@
                     const zone = document.getElementById('paymentProofZone');
                     zone.style.borderColor = '#ef4444';
                     zone.style.background  = '#fff5f5';
-                    zone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError = firstError ?? zone;
                 }
             }
+
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
     });
 
@@ -792,16 +947,5 @@
         });
     }
 
-    // Sync totals with delivery changes
-    const origUpdateDelivery = updateDelivery;
-    updateDelivery = function(price, cityId, cityName, subCityId, subCityName) {
-        origUpdateDelivery(price, cityId, cityName, subCityId, subCityName);
-        const method = document.querySelector('[name=payment_method]:checked')?.value;
-        if (method === 'bank_transfer') {
-            updateCollectionDisplay();
-        } else {
-            updateDepositTotal();
-        }
-    };
 </script>
 @endpush
