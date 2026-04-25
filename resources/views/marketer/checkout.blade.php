@@ -267,7 +267,8 @@
                     </label>
                     <label class="deposit-payer-option" id="optMosafir">
                         <input type="radio" name="_delivery_type_ui" value="mosafir">
-                        <img src="{{ asset('mosafer.svg') }}" style="height:16px"> خارج بنغازي
+                        <i class="ti ti-map-pin"></i>
+                        <span> خارج بنغازي </span>
                     </label>
                 </div>
             </div>
@@ -294,11 +295,13 @@
                 <select id="parentCity">
                     <option value="">-- اختر المدينة --</option>
                     @foreach($cities as $city)
+                        @if(!str_starts_with($city['name'], 'بنغازي'))
                         <option value="{{ $city['id'] }}"
                                 data-price="{{ $city['price'] }}"
                                 data-sub="{{ json_encode($city['sub_cities'] ?? []) }}">
                             {{ $city['name'] }} — {{ $city['price'] }} د.ل
                         </option>
+                        @endif
                     @endforeach
                 </select>
                 <div id="mosafirCityError" style="color:#ef4444;font-size:.82rem;margin-top:4px;display:none">يرجى اختيار المدينة</div>
