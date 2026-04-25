@@ -52,13 +52,33 @@
 </div>
 
 {{-- Delivery Man ───────────────────────────────── --}}
+@if(isset($order) && $order->agent)
+<div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3" style="background:#fdf8f6;border:1px solid #e8d5cc">
+    <div style="width:40px;height:40px;border-radius:50%;background:#4a2619;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ti ti-user text-white" style="font-size:1.1rem"></i>
+    </div>
+    <div class="flex-grow-1">
+        <div class="text-muted small mb-1">المندوب الداخلي</div>
+        <div class="fw-bold" style="color:#4a2619">{{ $order->agent->name }}</div>
+        @if($order->agent->phone)
+        <div class="text-muted small">{{ $order->agent->phone }}</div>
+        @endif
+    </div>
+    @if($order->agent->phone)
+    <a href="tel:{{ $order->agent->phone }}" class="btn btn-sm btn-outline-secondary rounded-3">
+        <i class="ti ti-phone me-1"></i> اتصال
+    </a>
+    @endif
+</div>
+@endif
+
 @if(!empty($mosafirParcel['deliveryman']))
 <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-4" style="background:#f0fdf4;border:1px solid #bbf7d0">
     <div style="width:40px;height:40px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="ti ti-motorbike text-white" style="font-size:1.1rem"></i>
     </div>
     <div class="flex-grow-1">
-        <div class="text-muted small mb-1">مندوب التوصيل</div>
+        <div class="text-muted small mb-1">مندوب المسافر</div>
         <div class="fw-bold" style="color:#15803d">{{ $mosafirParcel['deliveryman']['name'] }}</div>
         <div class="text-muted small">{{ $mosafirParcel['deliveryman']['phone'] }}</div>
     </div>

@@ -9,6 +9,7 @@ use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\DeliverOrderRequest;
 use App\Http\Requests\FailDeliveryRequest;
 use App\Models\Agent;
+use App\Models\DeliveryArea;
 use App\Models\Order;
 use App\Models\Vault;
 use App\Services\MosafirClient;
@@ -76,8 +77,9 @@ class OrderController extends Controller
         }
 
         $order->load(['marketer', 'items.product', 'logs', 'approvedBy', 'rejectedBy', 'agent', 'localArea']);
-        $agents = Agent::where('is_active', true)->orderBy('name')->get();
-        $cities = $mosafir->getPrices() ?? [];
+        $agents      = Agent::where('is_active', true)->orderBy('name')->get();
+        $localAreas  = DeliveryArea::orderBy('name')->get();
+        $cities      = $mosafir->getPrices() ?? [];
 
         $mosafirParcel = $order->mosafir_parcel_id
             ? $mosafir->showParcel($order->mosafir_parcel_id)
@@ -85,7 +87,7 @@ class OrderController extends Controller
 
         $vaults = Vault::orderBy('name')->get();
 
-        return view('orders.show', compact('order', 'agents', 'cities', 'mosafirParcel', 'vaults'));
+        return view('orders.show', compact('order', 'agents', 'localAreas', 'cities', 'mosafirParcel', 'vaults'));
     }
 
     public function dispatch(Request $request, Order $order, MosafirClient $mosafir)
@@ -146,13 +148,17 @@ class OrderController extends Controller
         }
 
         if ($type === 'agent') {
-            $request->validate(['agent_id' => 'required|exists:agents,id']);
+            $request->validate([
+                'agent_id'      => 'required|exists:agents,id',
+                'local_area_id' => 'nullable|exists:delivery_areas,id',
+            ]);
 
             $agent = Agent::findOrFail($request->agent_id);
 
             $order->update([
-                'status'   => 'with_agent',
-                'agent_id' => $agent->id,
+                'status'        => 'with_agent',
+                'agent_id'      => $agent->id,
+                'local_area_id' => $request->input('local_area_id') ?: null,
             ]);
 
             $order->logs()->create([

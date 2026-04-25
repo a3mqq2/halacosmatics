@@ -182,6 +182,24 @@
                             @endif
                         </div>
                     </div>
+                    @if($order->agent)
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-muted">المندوب</span>
+                        <div class="text-end">
+                            <div class="fw-semibold" style="font-size:.9rem">{{ $order->agent->name }}</div>
+                            <a href="tel:{{ $order->agent->phone }}" class="small text-decoration-none text-success">
+                                <i class="ti ti-phone me-1"></i>{{ $order->agent->phone }}
+                            </a>
+                            @if($order->agent->phone2)
+                            <div>
+                                <a href="tel:{{ $order->agent->phone2 }}" class="small text-decoration-none text-secondary">
+                                    <i class="ti ti-phone me-1"></i>{{ $order->agent->phone2 }}
+                                </a>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">رسوم التوصيل</span>
                         <span>{{ number_format($order->delivery_cost) }} د.ل</span>

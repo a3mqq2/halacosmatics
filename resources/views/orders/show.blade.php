@@ -605,7 +605,16 @@
                         <select name="agent_id" class="form-select" required>
                             <option value="">— اختر مندوباً —</option>
                             @foreach($agents as $agent)
-                                <option value="{{ $agent->id }}">{{ $agent->name }} — {{ $agent->phone }}</option>
+                                <option value="{{ $agent->id }}" {{ $order->agent_id == $agent->id ? 'selected' : '' }}>{{ $agent->name }} — {{ $agent->phone }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">المنطقة</label>
+                        <select name="local_area_id" class="form-select">
+                            <option value="">— بدون منطقة —</option>
+                            @foreach($localAreas as $area)
+                                <option value="{{ $area->id }}" {{ $order->local_area_id == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
                             @endforeach
                         </select>
                     </div>
