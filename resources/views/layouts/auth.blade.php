@@ -24,7 +24,16 @@
     </head>
 
     <body>
-        
+
+        {{-- Loading Overlay --}}
+        <div id="page-loading-overlay"
+             style="display:none;position:fixed;inset:0;background:rgba(255,255,255,.7);backdrop-filter:blur(2px);z-index:99999;align-items:center;justify-content:center;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+                <div class="spinner-border" style="width:3rem;height:3rem;color:#4a2619;" role="status"></div>
+                <span class="fw-semibold text-muted" style="font-size:.9rem">جاري التحميل...</span>
+            </div>
+        </div>
+
         <div class="auth-box overflow-hidden align-items-center d-flex">
             <div class="container">
                 <div class="row justify-content-center">
@@ -56,5 +65,27 @@
         <script src="{{ asset('assets/js/vendors.min.js') }}"></script>
         <!-- App js -->
         <script src="{{ asset('assets/js/app.js') }}"></script>
+        <script>
+            (function () {
+                const overlay = document.getElementById('page-loading-overlay');
+                function show() { overlay.style.display = 'flex'; }
+                function hide() { overlay.style.display = 'none'; }
+
+                document.addEventListener('click', function (e) {
+                    const a = e.target.closest('a[href]');
+                    if (!a) return;
+                    const href = a.getAttribute('href');
+                    if (!href || href === '#' || href.startsWith('javascript') || a.getAttribute('data-bs-toggle') || a.getAttribute('target') === '_blank') return;
+                    show();
+                });
+
+                document.addEventListener('submit', function (e) {
+                    if (e.target.tagName === 'FORM') show();
+                });
+
+                window.addEventListener('pageshow', hide);
+                window.addEventListener('load', hide);
+            })();
+        </script>
     </body>
 </html>

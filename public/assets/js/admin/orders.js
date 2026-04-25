@@ -49,11 +49,29 @@ function selectDispatch(type) {
     if (type === 'mosafir') {
         setTimeout(initDispatchSelects, 50);
     }
+    if (type === 'agent') {
+        updateAreaDeliveryCost();
+    }
 }
 
 function resetDispatch() {
     document.querySelectorAll('.dispatch-card').forEach(c => c.classList.remove('selected'));
     document.querySelectorAll('.dispatch-form').forEach(f => f.classList.add('d-none'));
+}
+
+function updateAreaDeliveryCost() {
+    const select  = document.getElementById('agentAreaSelect');
+    const preview = document.getElementById('agentAreaCostPreview');
+    const value   = document.getElementById('agentAreaCostValue');
+    const selected = select.options[select.selectedIndex];
+    const price   = selected?.dataset?.price;
+
+    if (price !== undefined && price !== '') {
+        value.textContent = Number(price).toLocaleString('en');
+        preview.classList.remove('d-none');
+    } else {
+        preview.classList.add('d-none');
+    }
 }
 
 function toggleFailNotes(value) {

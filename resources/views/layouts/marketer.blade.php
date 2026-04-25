@@ -116,7 +116,7 @@
 
 {{-- Loading Overlay --}}
 <div id="page-loading-overlay"
-     style="display:none;position:fixed;inset:0;background:rgba(255,255,255,.7);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+     style="display:none;position:fixed;inset:0;background:rgba(255,255,255,.7);backdrop-filter:blur(3px);z-index:99999;align-items:center;justify-content:center;">
     <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
         <div class="spinner-border" style="width:3rem;height:3rem;color:#4a2619;" role="status"></div>
         <span class="fw-semibold text-muted" style="font-size:.9rem">جاري التحميل...</span>

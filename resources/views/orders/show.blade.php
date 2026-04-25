@@ -611,12 +611,15 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">المنطقة</label>
-                        <select name="local_area_id" class="form-select">
-                            <option value="">— بدون منطقة —</option>
+                        <select name="local_area_id" class="form-select" id="agentAreaSelect" onchange="updateAreaDeliveryCost()">
+                            <option value="" data-price="">— بدون منطقة —</option>
                             @foreach($localAreas as $area)
-                                <option value="{{ $area->id }}" {{ $order->local_area_id == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
+                                <option value="{{ $area->id }}" data-price="{{ $area->price }}" {{ $order->local_area_id == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
                             @endforeach
                         </select>
+                        <div id="agentAreaCostPreview" class="mt-2 text-muted small d-none">
+                            رسوم التوصيل: <span id="agentAreaCostValue" class="fw-semibold text-dark"></span> د.ل
+                        </div>
                     </div>
                     <div class="d-flex gap-2 justify-content-end">
                         <button type="button" class="btn btn-outline-secondary" onclick="resetDispatch()">رجوع</button>

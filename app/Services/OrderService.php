@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\FailDeliveryData;
 use Illuminate\Http\UploadedFile;
+use App\Models\Agent;
 use App\Models\AgentTransaction;
 use App\Models\Marketer;
 use App\Models\MarketerTransaction;
@@ -219,7 +220,7 @@ class OrderService
             $isBankTransfer = $order->payment_method === 'bank_transfer';
             $adminId        = Auth::guard('web')->id();
 
-            if (! $isBankTransfer) {
+            if (! $isBankTransfer && ! $order->agent_id) {
                 $marketer        = $order->marketer;
                 $marketerAmount  = (float) $order->products_total;
                 $marketerBalance = (float) $marketer->balance + $marketerAmount;
@@ -237,31 +238,52 @@ class OrderService
                     'balance_after'  => $marketerBalance,
                 ]);
             }
+        });
+    }
 
-            if ($order->agent_id) {
-                if ($isBankTransfer && $order->delivery_included) {
-                    // المندوب لا يستلم شيئاً — الزبون دفع بالكامل مسبقاً
-                } else {
-                    $agent = $order->agent;
+    public function dispatchToAgent(Order $order, Agent $agent): void
+    {
+        DB::transaction(function () use ($order, $agent) {
+            $isBankTransfer = $order->payment_method === 'bank_transfer';
+            $adminId        = Auth::guard('web')->id();
 
-                    $agentAmount = $isBankTransfer
-                        ? (float) $order->delivery_cost
-                        : (float) $order->products_total;
+            $agentAmount = ($isBankTransfer && $order->delivery_included)
+                ? 0.0
+                : ($isBankTransfer ? (float) $order->delivery_cost : (float) $order->products_total);
 
-                    $agentBalance = (float) $agent->balance + $agentAmount;
-                    $agent->update(['balance' => $agentBalance]);
+            if ($agentAmount > 0) {
+                $agentBalance = (float) $agent->balance + $agentAmount;
+                $agent->update(['balance' => $agentBalance]);
 
-                    AgentTransaction::create([
-                        'agent_id'      => $agent->id,
-                        'user_id'       => $adminId,
-                        'vault_id'      => null,
-                        'type'          => 'deposit',
-                        'description'   => "استلام قيمة طلب #{$order->id} من الزبون {$order->customer_name}",
-                        'amount'        => $agentAmount,
-                        'date'          => now()->toDateString(),
-                        'balance_after' => $agentBalance,
-                    ]);
-                }
+                AgentTransaction::create([
+                    'agent_id'      => $agent->id,
+                    'user_id'       => $adminId,
+                    'vault_id'      => null,
+                    'type'          => 'deposit',
+                    'description'   => "عهدة طلب #{$order->id} — {$order->customer_name}",
+                    'amount'        => $agentAmount,
+                    'date'          => now()->toDateString(),
+                    'balance_after' => $agentBalance,
+                ]);
+            }
+
+            if (! $isBankTransfer) {
+                $marketer        = $order->marketer;
+                $marketerAmount  = (float) $order->products_total;
+                $marketerBalance = (float) $marketer->balance + $marketerAmount;
+
+                $marketer->update(['balance' => $marketerBalance]);
+
+                MarketerTransaction::create([
+                    'marketer_id'    => $marketer->id,
+                    'user_id'        => $adminId,
+                    'type'           => 'deposit',
+                    'recipient_name' => trim($marketer->first_name . ' ' . $marketer->last_name),
+                    'description'    => "إيداع مبيعات طلب #{$order->id} — تسليم للمندوب",
+                    'amount'         => $marketerAmount,
+                    'date'           => now()->toDateString(),
+                    'balance_after'  => $marketerBalance,
+                ]);
             }
         });
     }

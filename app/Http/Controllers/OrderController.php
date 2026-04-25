@@ -90,7 +90,7 @@ class OrderController extends Controller
         return view('orders.show', compact('order', 'agents', 'localAreas', 'cities', 'mosafirParcel', 'vaults'));
     }
 
-    public function dispatch(Request $request, Order $order, MosafirClient $mosafir)
+    public function dispatch(Request $request, Order $order, MosafirClient $mosafir, OrderService $service)
     {
         if ($order->status != 'processing') {
             return back()->with('error', 'لا يمكن إحالة هذا الطلب.');
@@ -155,16 +155,27 @@ class OrderController extends Controller
 
             $agent = Agent::findOrFail($request->agent_id);
 
+            $areaId       = $request->input('local_area_id') ?: null;
+            $deliveryCost = $order->delivery_cost;
+            if ($areaId) {
+                $area         = DeliveryArea::find($areaId);
+                $deliveryCost = $area ? $area->price : $order->delivery_cost;
+            }
+
             $order->update([
                 'status'        => 'with_agent',
                 'agent_id'      => $agent->id,
-                'local_area_id' => $request->input('local_area_id') ?: null,
+                'local_area_id' => $areaId,
+                'delivery_cost' => $deliveryCost,
             ]);
 
             $order->logs()->create([
                 'action'      => 'dispatched',
                 'description' => "تمت إحالة الطلب للمندوب: {$agent->name}",
             ]);
+
+            $order->refresh();
+            $service->dispatchToAgent($order, $agent);
 
             return back()->with('success', "تمت إحالة الطلب للمندوب {$agent->name} بنجاح.");
         }

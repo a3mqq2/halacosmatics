@@ -132,6 +132,16 @@
     </head>
 
     <body dir="rtl">
+
+        {{-- Loading Overlay --}}
+        <div id="page-loading-overlay"
+             style="display:none;position:fixed;inset:0;background:rgba(255,255,255,.65);backdrop-filter:blur(2px);z-index:99999;align-items:center;justify-content:center;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+                <div class="spinner-border text-primary" style="width:3rem;height:3rem;" role="status"></div>
+                <span class="fw-semibold text-muted" style="font-size:.9rem">جاري التحميل...</span>
+            </div>
+        </div>
+
         <!-- Begin page -->
         <div class="wrapper">
             <header class="app-topbar">
@@ -265,16 +275,7 @@
                         </div>
                         @endif
 
-                        {{-- Loading Overlay --}}
-        <div id="page-loading-overlay"
-             style="display:none;position:fixed;inset:0;background:rgba(255,255,255,.65);backdrop-filter:blur(2px);z-index:9999;align-items:center;justify-content:center;">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-                <div class="spinner-border text-primary" style="width:3rem;height:3rem;" role="status"></div>
-                <span class="fw-semibold text-muted" style="font-size:.9rem">جاري التحميل...</span>
-            </div>
-        </div>
-
-        <div id="user-dropdown-detailed" class="topbar-item nav-user">
+                        <div id="user-dropdown-detailed" class="topbar-item nav-user">
                             <div class="dropdown">
                                 <a class="topbar-link dropdown-toggle drop-arrow-none px-2 d-flex align-items-center gap-2" data-bs-toggle="dropdown" href="#!" aria-haspopup="false" aria-expanded="false">
                                     <div class="avatar-sm">
