@@ -865,7 +865,7 @@
         if (value === 'company')  document.getElementById('optCompany').classList.add('selected');
 
         const proofInput = document.getElementById('proofInput');
-        if (value !== 'company') {
+        if (value != 'company') {
             proofInput.removeAttribute('required');
             clearProof();
         } else {

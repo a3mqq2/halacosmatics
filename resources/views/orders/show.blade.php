@@ -507,7 +507,7 @@
                 <div class="row g-3" id="dispatchOptions">
 
                     {{-- Musafir Option — hidden for local delivery orders --}}
-                    @if($order->delivery_type !== 'local')
+                    @if($order->delivery_type != 'local')
                     <div class="col-12 col-sm-6">
                         <div class="dispatch-card" onclick="selectDispatch('mosafir')" id="card-mosafir">
                             <img src="{{ asset('mosafer.svg') }}" alt="المسافر" class="dispatch-logo mb-3">
@@ -525,7 +525,7 @@
                     @endif
 
                     {{-- Local Agent Option --}}
-                    <div class="col-12 {{ $order->delivery_type !== 'local' ? 'col-sm-6' : '' }}">
+                    <div class="col-12 {{ $order->delivery_type != 'local' ? 'col-sm-6' : '' }}">
                         <div class="dispatch-card" onclick="selectDispatch('agent')" id="card-agent">
                             <i class="ti ti-motorbike dispatch-icon mb-3"></i>
                             <div class="fw-bold fs-6">مندوب محلي</div>

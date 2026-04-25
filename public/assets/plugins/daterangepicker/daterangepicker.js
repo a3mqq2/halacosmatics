@@ -11,7 +11,7 @@
         // AMD. Make globaly available as well
         define(['moment', 'jquery'], function (moment, jquery) {
             if (!jquery.fn) jquery.fn = {}; // webpack server rendering
-            if (typeof moment !== 'function' && moment.hasOwnProperty('default')) moment = moment['default']
+            if (typeof moment != 'function' && moment.hasOwnProperty('default')) moment = moment['default']
             return factory(moment, jquery);
         });
     } else if (typeof module === 'object' && module.exports) {
@@ -89,7 +89,7 @@
         this.rightCalendar = {};
 
         //custom options from user
-        if (typeof options !== 'object' || options === null)
+        if (typeof options != 'object' || options === null)
             options = {};
 
         //allow setting options with data attributes
@@ -97,7 +97,7 @@
         options = $.extend(this.element.data(), options);
 
         //html template for the picker UI
-        if (typeof options.template !== 'string' && !(options.template instanceof $))
+        if (typeof options.template != 'string' && !(options.template instanceof $))
             options.template =
             '<div class="daterangepicker">' +
                 '<div class="ranges"></div>' +
@@ -300,11 +300,11 @@
                 if (split.length == 2) {
                     start = moment(split[0], this.locale.format);
                     end = moment(split[1], this.locale.format);
-                } else if (this.singleDatePicker && val !== "") {
+                } else if (this.singleDatePicker && val != "") {
                     start = moment(val, this.locale.format);
                     end = moment(val, this.locale.format);
                 }
-                if (start !== null && end !== null) {
+                if (start != null && end != null) {
                     this.setStartDate(start);
                     this.setEndDate(end);
                 }
@@ -821,7 +821,7 @@
 
                     //apply custom classes for this date
                     var isCustom = this.isCustomDate(calendar[row][col]);
-                    if (isCustom !== false) {
+                    if (isCustom != false) {
                         if (typeof isCustom === 'string')
                             classes.push(isCustom);
                         else
@@ -1548,7 +1548,7 @@
                 if (!this.singleDatePicker) {
                     newValue += this.locale.separator + this.endDate.format(this.locale.format);
                 }
-                if (newValue !== this.element.val()) {
+                if (newValue != this.element.val()) {
                     this.element.val(newValue).trigger('change');
                 }
             }

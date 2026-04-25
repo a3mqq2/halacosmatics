@@ -67,7 +67,7 @@ class MarketerService
             $data['passport'] = $this->uploadService->store($dto->passport, 'passports');
         }
 
-        if ($dto->password !== null) {
+        if ($dto->password != null) {
             $data['password'] = $dto->password;
         }
 

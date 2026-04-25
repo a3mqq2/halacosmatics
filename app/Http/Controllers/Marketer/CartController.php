@@ -36,7 +36,7 @@ class CartController extends Controller
     {
         $marketer = Auth::guard('marketer')->user();
 
-        if ($cartItem->marketer_id !== $marketer->id) {
+        if ($cartItem->marketer_id != $marketer->id) {
             abort(403);
         }
 
@@ -49,7 +49,7 @@ class CartController extends Controller
     {
         $marketer = Auth::guard('marketer')->user();
 
-        if ($cartItem->marketer_id !== $marketer->id) {
+        if ($cartItem->marketer_id != $marketer->id) {
             abort(403);
         }
 

@@ -124,7 +124,7 @@ class AuthService
             return false;
         }
 
-        if ($marketer->status !== 'approved') {
+        if ($marketer->status != 'approved') {
             Log::channel('single')->warning('[AUTH][MARKETER] الحساب غير معتمد', [
                 'marketer_id'    => $marketer->id,
                 'marketer_phone' => $marketer->phone,

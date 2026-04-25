@@ -378,7 +378,7 @@
 
                     {{-- ── Tabs ── --}}
                     <div class="auth-tabs">
-                        <button class="auth-tab {{ old('_form') !== 'register' ? 'active' : '' }}"
+                        <button class="auth-tab {{ old('_form') != 'register' ? 'active' : '' }}"
                                 onclick="switchTab('login')" id="tab-login" type="button">
                             تسجيل الدخول
                         </button>
@@ -389,7 +389,7 @@
                     </div>
 
                     {{-- ══ LOGIN PANE ══ --}}
-                    <div class="auth-pane {{ old('_form') !== 'register' ? 'active' : '' }}" id="pane-login">
+                    <div class="auth-pane {{ old('_form') != 'register' ? 'active' : '' }}" id="pane-login">
 
                         <div class="login-heading" style="margin-bottom:24px">
                             <h1>مرحباً بك</h1>
@@ -667,7 +667,7 @@
             var validPrefixes = ['91', '92', '93', '94'];
             var prefix = phoneVal.slice(0, 2);
 
-            if (phoneVal.length !== 9) {
+            if (phoneVal.length != 9) {
                 e.preventDefault();
                 errEl.textContent = 'رقم الهاتف يجب أن يكون 9 أرقام بالضبط.';
                 errEl.style.display = 'block';

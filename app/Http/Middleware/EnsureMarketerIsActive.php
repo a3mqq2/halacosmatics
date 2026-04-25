@@ -10,7 +10,7 @@ class EnsureMarketerIsActive
     {
         $user = auth('marketer')->user();
 
-        if (!$user || !$user->is_active || $user->status !== 'approved') {
+        if (!$user || !$user->is_active || $user->status != 'approved') {
             auth('marketer')->logout();
             return redirect('/login');
         }

@@ -90,7 +90,7 @@
                                 <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline-primary" title="تعديل">
                                     <i class="ti ti-edit"></i>
                                 </a>
-                                @if($user->id !== Auth::id())
+                                @if($user->id != Auth::id())
                                 <button type="button" class="btn btn-sm btn-outline-danger" title="حذف"
                                         onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')">
                                     <i class="ti ti-trash"></i>
@@ -148,7 +148,7 @@
                     <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline-primary flex-fill">
                         <i class="ti ti-edit me-1"></i> تعديل
                     </a>
-                    @if($user->id !== Auth::id())
+                    @if($user->id != Auth::id())
                     <button type="button" class="btn btn-sm btn-outline-danger"
                             onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')">
                         <i class="ti ti-trash"></i>

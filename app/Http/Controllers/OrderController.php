@@ -90,7 +90,7 @@ class OrderController extends Controller
 
     public function dispatch(Request $request, Order $order, MosafirClient $mosafir)
     {
-        if ($order->status !== 'processing') {
+        if ($order->status != 'processing') {
             return back()->with('error', 'لا يمكن إحالة هذا الطلب.');
         }
 
@@ -168,7 +168,7 @@ class OrderController extends Controller
 
     public function approve(ApproveOrderRequest $request, Order $order, OrderService $service)
     {
-        if ($order->status !== 'pending') {
+        if ($order->status != 'pending') {
             return back()->with('error', 'لا يمكن الموافقة على هذا الطلب.');
         }
 
@@ -179,7 +179,7 @@ class OrderController extends Controller
 
     public function acceptReturn(AcceptReturnRequest $_, Order $order, OrderService $service)
     {
-        if ($order->status !== 'returning' || ! $order->agent_id) {
+        if ($order->status != 'returning' || ! $order->agent_id) {
             return back()->with('error', 'لا يمكن تنفيذ هذه العملية على هذا الطلب.');
         }
 
@@ -190,7 +190,7 @@ class OrderController extends Controller
 
     public function deliver(DeliverOrderRequest $_, Order $order, OrderService $service)
     {
-        if ($order->status !== 'with_agent' || ! $order->agent_id) {
+        if ($order->status != 'with_agent' || ! $order->agent_id) {
             return back()->with('error', 'لا يمكن تنفيذ هذه العملية على هذا الطلب.');
         }
 
@@ -201,7 +201,7 @@ class OrderController extends Controller
 
     public function failDelivery(FailDeliveryRequest $request, Order $order, OrderService $service)
     {
-        if ($order->status !== 'with_agent' || ! $order->agent_id) {
+        if ($order->status != 'with_agent' || ! $order->agent_id) {
             return back()->with('error', 'لا يمكن تنفيذ هذه العملية على هذا الطلب.');
         }
 
@@ -213,7 +213,7 @@ class OrderController extends Controller
 
     public function cancel(CancelOrderRequest $request, Order $order, OrderService $service)
     {
-        if ($order->status !== 'processing') {
+        if ($order->status != 'processing') {
             return back()->with('error', 'لا يمكن إلغاء هذا الطلب.');
         }
 
@@ -228,7 +228,7 @@ class OrderController extends Controller
             'rejected_reason' => 'required|string|max:500',
         ]);
 
-        if ($order->status !== 'pending') {
+        if ($order->status != 'pending') {
             return back()->with('error', 'لا يمكن رفض هذا الطلب.');
         }
 

@@ -35,7 +35,7 @@ class OrderController extends Controller
     {
         $marketer = Auth::guard('marketer')->user();
 
-        if ($order->marketer_id !== $marketer->id) {
+        if ($order->marketer_id != $marketer->id) {
             abort(403);
         }
 
@@ -52,11 +52,11 @@ class OrderController extends Controller
     {
         $marketer = Auth::guard('marketer')->user();
 
-        if ($order->marketer_id !== $marketer->id) {
+        if ($order->marketer_id != $marketer->id) {
             abort(403);
         }
 
-        if ($order->status !== 'pending') {
+        if ($order->status != 'pending') {
             return back()->with('error', 'لا يمكن إلغاء هذا الطلب.');
         }
 

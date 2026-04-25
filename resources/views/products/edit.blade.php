@@ -208,7 +208,7 @@
         const item = document.getElementById('imgItem' + id);
         const alreadyDeleted = deletedIds.includes(id);
         if (alreadyDeleted) {
-            deletedIds = deletedIds.filter(i => i !== id);
+            deletedIds = deletedIds.filter(i => i != id);
             item.classList.remove('deleted');
             item.querySelector('.remove-btn').innerHTML = '<i class="ti ti-x"></i>';
             item.querySelector('.remove-btn').onclick = () => markDelete(id);
