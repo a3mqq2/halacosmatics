@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Services\MosafirClient;
 use App\Services\OrderService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SyncMosafirOrders extends Command
 {
@@ -69,18 +70,23 @@ class SyncMosafirOrders extends Command
 
             if ($status === 'FinancialSettlementPending' && $order->status === 'with_agent') {
                 $this->orderService->markDelivered($order);
+                Log::info("mosafir_sync: order #{$order->id} marked delivered — {$label}");
                 continue;
             }
 
             if (in_array($status, self::RETURNING_STATUSES) && $order->status === 'with_agent') {
                 $this->orderService->markFailedDelivery($order, new FailDeliveryData('other', "المسافر: {$label}"));
+                Log::info("mosafir_sync: order #{$order->id} marked returning — {$label}");
                 continue;
             }
 
             if ($status === 'ReturnedAndReceived' && $order->status === 'returning') {
                 $this->orderService->markReturned($order);
+                Log::info("mosafir_sync: order #{$order->id} marked returned — {$label}");
                 continue;
             }
+
+            Log::info("mosafir_sync: order #{$order->id} no action — {$label}");
         }
     }
 }
