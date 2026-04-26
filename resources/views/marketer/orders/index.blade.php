@@ -217,6 +217,15 @@
                            inputmode="numeric" dir="ltr">
                 </div>
 
+                {{-- رقم شحنة المسافر --}}
+                <div>
+                    <div class="filter-label">رقم شحنة المسافر</div>
+                    <input type="text" name="mosafir_parcel_id" class="filter-input"
+                           placeholder="ابحث برقم الشحنة..."
+                           value="{{ $filters['mosafir_parcel_id'] ?? '' }}"
+                           dir="ltr">
+                </div>
+
                 {{-- المدينة --}}
                 <div>
                     <div class="filter-label">المدينة</div>

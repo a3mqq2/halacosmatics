@@ -14,16 +14,17 @@ class OrderController extends Controller
     {
         $marketer = Auth::guard('marketer')->user();
 
-        $filters = request()->only(['status', 'customer_name', 'customer_phone', 'city_name', 'date_from', 'date_to']);
+        $filters = request()->only(['status', 'customer_name', 'customer_phone', 'mosafir_parcel_id', 'city_name', 'date_from', 'date_to']);
 
         $orders = $marketer->orders()
             ->with('items')
-            ->when($filters['status'] ?? null,         fn($q, $v) => $q->where('status', $v))
-            ->when($filters['customer_name'] ?? null,  fn($q, $v) => $q->where('customer_name', 'like', "%{$v}%"))
-            ->when($filters['customer_phone'] ?? null, fn($q, $v) => $q->where('customer_phone', 'like', "%{$v}%"))
-            ->when($filters['city_name'] ?? null,      fn($q, $v) => $q->where(fn($q2) => $q2->where('city_name', 'like', "%{$v}%")->orWhere('sub_city_name', 'like', "%{$v}%")))
-            ->when($filters['date_from'] ?? null,      fn($q, $v) => $q->whereDate('created_at', '>=', $v))
-            ->when($filters['date_to'] ?? null,        fn($q, $v) => $q->whereDate('created_at', '<=', $v))
+            ->when($filters['status'] ?? null,             fn($q, $v) => $q->where('status', $v))
+            ->when($filters['customer_name'] ?? null,      fn($q, $v) => $q->where('customer_name', 'like', "%{$v}%"))
+            ->when($filters['customer_phone'] ?? null,     fn($q, $v) => $q->where(fn($q2) => $q2->where('customer_phone', 'like', "%{$v}%")->orWhere('customer_phone2', 'like', "%{$v}%")))
+            ->when($filters['mosafir_parcel_id'] ?? null,  fn($q, $v) => $q->where('mosafir_parcel_id', 'like', "%{$v}%"))
+            ->when($filters['city_name'] ?? null,          fn($q, $v) => $q->where(fn($q2) => $q2->where('city_name', 'like', "%{$v}%")->orWhere('sub_city_name', 'like', "%{$v}%")))
+            ->when($filters['date_from'] ?? null,          fn($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['date_to'] ?? null,            fn($q, $v) => $q->whereDate('created_at', '<=', $v))
             ->latest()
             ->paginate(15)
             ->withQueryString();

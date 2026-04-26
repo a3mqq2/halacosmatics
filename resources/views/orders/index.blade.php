@@ -19,11 +19,27 @@
     <div class="card-body">
         <form method="GET" class="row g-2 align-items-end">
 
-            <div class="col-12 col-sm-4">
+            <div class="col-12 col-sm-3">
                 <input type="text" name="filter[customer_name]"
                        class="form-control"
                        placeholder="بحث باسم الزبون..."
                        value="{{ request('filter.customer_name') }}">
+            </div>
+
+            <div class="col-12 col-sm-2">
+                <input type="text" name="filter[customer_phone]"
+                       class="form-control"
+                       placeholder="رقم الهاتف..."
+                       value="{{ request('filter.customer_phone') }}"
+                       inputmode="numeric" dir="ltr">
+            </div>
+
+            <div class="col-12 col-sm-2">
+                <input type="text" name="filter[mosafir_parcel_id]"
+                       class="form-control"
+                       placeholder="رقم شحنة المسافر..."
+                       value="{{ request('filter.mosafir_parcel_id') }}"
+                       dir="ltr">
             </div>
 
             <div class="col-12 col-sm-3">

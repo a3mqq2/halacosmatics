@@ -46,6 +46,8 @@ class OrderController extends Controller
         $orders = QueryBuilder::for(Order::class)
             ->allowedFilters(
                 AllowedFilter::partial('customer_name'),
+                AllowedFilter::partial('customer_phone'),
+                AllowedFilter::partial('mosafir_parcel_id'),
                 AllowedFilter::exact('status'),
                 AllowedFilter::exact('marketer_id'),
                 AllowedFilter::callback('delivery_type', function ($query, $value) {

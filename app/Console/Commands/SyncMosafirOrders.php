@@ -69,35 +69,18 @@ class SyncMosafirOrders extends Command
 
             if ($status === 'FinancialSettlementPending' && $order->status === 'with_agent') {
                 $this->orderService->markDelivered($order);
-                $order->logs()->create([
-                    'action'      => 'mosafir_sync',
-                    'description' => "مزامنة المسافر — الحالة: {$label}",
-                ]);
                 continue;
             }
 
             if (in_array($status, self::RETURNING_STATUSES) && $order->status === 'with_agent') {
                 $this->orderService->markFailedDelivery($order, new FailDeliveryData('other', "المسافر: {$label}"));
-                $order->logs()->create([
-                    'action'      => 'mosafir_sync',
-                    'description' => "مزامنة المسافر — الحالة: {$label}",
-                ]);
                 continue;
             }
 
             if ($status === 'ReturnedAndReceived' && $order->status === 'returning') {
                 $this->orderService->markReturned($order);
-                $order->logs()->create([
-                    'action'      => 'mosafir_sync',
-                    'description' => "مزامنة المسافر — الحالة: {$label}",
-                ]);
                 continue;
             }
-
-            $order->logs()->create([
-                'action'      => 'mosafir_sync',
-                'description' => "مزامنة المسافر — الحالة: {$label}",
-            ]);
         }
     }
 }
