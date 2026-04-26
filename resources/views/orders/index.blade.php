@@ -203,15 +203,17 @@ function toggleDeliveryFilter(status) {
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-3">
 
-                    {{-- Header: name + status --}}
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <div class="fw-bold fs-6 mb-1">{{ $order->customer_name }}</div>
-                            <div class="text-muted" style="font-size:.9rem">{{ $order->customer_phone }}</div>
-                        </div>
+                    {{-- Header: order id + status --}}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold" style="font-size:1rem;color:#4a2619"># {{ $order->id }}</span>
                         <span class="badge fs-6 bg-{{ $order->status_color }}-subtle text-{{ $order->status_color }} border border-{{ $order->status_color }}-subtle px-2 py-1">
                             {{ $order->status_label }}
                         </span>
+                    </div>
+                    {{-- Name + phone --}}
+                    <div class="mb-3">
+                        <div class="fw-bold fs-6 mb-1">{{ $order->customer_name }}</div>
+                        <div class="text-muted" style="font-size:.9rem">{{ $order->customer_phone }}</div>
                     </div>
 
                     {{-- Info rows --}}

@@ -94,9 +94,9 @@
     border-bottom: 1px solid #f5f0ee;
 }
 .order-id {
-    font-size: .78rem;
-    font-weight: 700;
-    color: #aaa;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #4a2619;
     letter-spacing: .03em;
 }
 .order-card-body {
