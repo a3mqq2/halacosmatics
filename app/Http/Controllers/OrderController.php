@@ -105,9 +105,12 @@ class OrderController extends Controller
 
             $request->validate([
                 'customer_name'    => 'required|string|max:100',
-                'recipient_number' => 'required|string|max:20',
+                'recipient_number' => ['required', 'regex:/^09[1-4]\d{7}$/'],
                 'to_city_id'       => 'required',
                 'desc'             => 'required|string|max:500',
+            ], [
+                'recipient_number.required' => 'رقم الهاتف مطلوب',
+                'recipient_number.regex'    => 'رقم الهاتف يجب أن يتكون من 10 أرقام ويبدأ بـ 091 أو 092 أو 093 أو 094',
             ]);
 
             if ($order->payment_method === 'bank_transfer') {

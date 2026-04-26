@@ -15,8 +15,8 @@ class CheckoutRequest extends FormRequest
     {
         return [
             'customer_name'   => 'required|string|max:255',
-            'customer_phone'  => 'required|string|max:20',
-            'customer_phone2' => 'nullable|string|max:20',
+            'customer_phone'  => ['required', 'regex:/^09[1-4]\d{7}$/'],
+            'customer_phone2' => ['nullable', 'regex:/^09[1-4]\d{7}$/'],
             'address'         => 'required|string|max:500',
             'notes'           => 'nullable|string|max:1000',
 
@@ -37,6 +37,14 @@ class CheckoutRequest extends FormRequest
             'payment_method'   => 'required|in:cash,bank_transfer',
             'payment_proof'    => 'nullable|required_if:payment_method,bank_transfer|file|mimes:jpg,jpeg,png|max:5120',
             'delivery_included'=> 'nullable|boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'customer_phone.regex'  => 'رقم الهاتف يجب أن يتكون من 10 أرقام ويبدأ بـ 091 أو 092 أو 093 أو 094',
+            'customer_phone2.regex' => 'رقم الهاتف الاحتياطي يجب أن يتكون من 10 أرقام ويبدأ بـ 091 أو 092 أو 093 أو 094',
         ];
     }
 

@@ -555,8 +555,11 @@
 
                         <div class="col-12 col-sm-6">
                             <label class="form-label fw-semibold">رقم الهاتف <span class="text-danger">*</span></label>
-                            <input type="text" name="recipient_number" class="form-control"
-                                   value="{{ $order->customer_phone }}" required inputmode="numeric">
+                            <input type="text" name="recipient_number" id="recipientNumber" class="form-control @error('recipient_number') is-invalid @enderror"
+                                   value="{{ old('recipient_number', $order->customer_phone) }}" required inputmode="numeric">
+                            @error('recipient_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="col-12 col-sm-6">
@@ -799,6 +802,14 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         new bootstrap.Modal(document.getElementById('cancelModal')).show();
+    });
+</script>
+@endif
+@if($errors->has('recipient_number'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        selectDispatch('mosafir');
+        new bootstrap.Modal(document.getElementById('dispatchModal')).show();
     });
 </script>
 @endif

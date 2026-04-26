@@ -797,9 +797,35 @@
         document.getElementById('paymentProofImg').src                   = '';
     }
 
+    const phonePattern = /^09[1-4]\d{7}$/;
+
+    function validatePhone(inputId, errorId, optional) {
+        const input = document.getElementById(inputId);
+        let errEl   = document.getElementById(errorId);
+        if (!errEl) {
+            errEl = document.createElement('div');
+            errEl.id = errorId;
+            errEl.style.cssText = 'color:#ef4444;font-size:.82rem;margin-top:4px;display:none';
+            errEl.textContent   = 'رقم الهاتف يجب أن يتكون من 10 أرقام ويبدأ بـ 091 أو 092 أو 093 أو 094';
+            input.parentNode.appendChild(errEl);
+        }
+        const val = input.value.trim();
+        if ((optional && val === '') || phonePattern.test(val)) {
+            errEl.style.display = 'none';
+            input.classList.remove('is-invalid');
+            return true;
+        }
+        errEl.style.display = '';
+        input.classList.add('is-invalid');
+        return false;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         switchPaymentMethod('cash');
         switchDeliveryType('local');
+
+        document.getElementById('customerPhone').addEventListener('input',  () => validatePhone('customerPhone',  'phoneError',  false));
+        document.getElementById('customerPhone2').addEventListener('input', () => validatePhone('customerPhone2', 'phone2Error', true));
 
         document.querySelectorAll('[name=_delivery_type_ui]').forEach(radio => {
             radio.addEventListener('change', () => switchDeliveryType(radio.value));
@@ -813,19 +839,22 @@
             let firstError = null;
             const delivType = document.getElementById('hiddenDeliveryType').value;
 
+            if (!validatePhone('customerPhone',  'phoneError',  false)) { e.preventDefault(); firstError = firstError ?? document.getElementById('phoneError'); }
+            if (!validatePhone('customerPhone2', 'phone2Error', true))  { e.preventDefault(); firstError = firstError ?? document.getElementById('phone2Error'); }
+
             if (delivType === 'local') {
                 if (!document.getElementById('hiddenLocalAreaId').value) {
                     e.preventDefault();
                     const errEl = document.getElementById('localAreaError');
                     errEl.style.display = '';
-                    firstError = errEl;
+                    firstError = firstError ?? errEl;
                 }
             } else {
                 if (!document.getElementById('hiddenCityId').value) {
                     e.preventDefault();
                     const errEl = document.getElementById('mosafirCityError');
                     errEl.style.display = '';
-                    firstError = errEl;
+                    firstError = firstError ?? errEl;
                 }
             }
 

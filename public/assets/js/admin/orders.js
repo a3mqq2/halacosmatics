@@ -1,6 +1,41 @@
+const PHONE_PATTERN = /^09[1-4]\d{7}$/;
+
+function validateDispatchPhone() {
+    const input = document.querySelector('#form-mosafir [name="recipient_number"]');
+    if (!input) return true;
+
+    let errEl = document.getElementById('dispatchPhoneError');
+    if (!errEl) {
+        errEl = document.createElement('div');
+        errEl.id = 'dispatchPhoneError';
+        errEl.style.cssText = 'color:#ef4444;font-size:.82rem;margin-top:4px;display:none';
+        errEl.textContent   = 'رقم الهاتف يجب أن يتكون من 10 أرقام ويبدأ بـ 091 أو 092 أو 093 أو 094';
+        input.parentNode.appendChild(errEl);
+    }
+
+    if (PHONE_PATTERN.test(input.value.trim())) {
+        errEl.style.display = 'none';
+        input.classList.remove('is-invalid');
+        return true;
+    }
+    errEl.style.display = '';
+    input.classList.add('is-invalid');
+    return false;
+}
+
 document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', (e) => {
         if (e.defaultPrevented) return;
+
+        if (form.id === 'form-mosafir') {
+            if (!validateDispatchPhone()) {
+                e.preventDefault();
+                const errEl = document.getElementById('dispatchPhoneError');
+                if (errEl) errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+        }
+
         const btn = form.querySelector('[type="submit"]');
         if (! btn) return;
         btn.disabled = true;
@@ -48,6 +83,11 @@ function selectDispatch(type) {
 
     if (type === 'mosafir') {
         setTimeout(initDispatchSelects, 50);
+        const phoneInput = document.querySelector('#form-mosafir [name="recipient_number"]');
+        if (phoneInput && !phoneInput.dataset.phoneListenerAdded) {
+            phoneInput.addEventListener('input', validateDispatchPhone);
+            phoneInput.dataset.phoneListenerAdded = '1';
+        }
     }
     if (type === 'agent') {
         updateAreaDeliveryCost();
