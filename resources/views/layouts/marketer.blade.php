@@ -133,26 +133,22 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <img src="{{ asset('assets/images/logo-black.png') }}" alt="logo" style="height:72px">
         <div class="d-flex align-items-center gap-2">
-            <div style="text-align:left">
-                <div style="font-size:.72rem;color:#9ca3af;font-weight:600;line-height:1.2">مرحباً</div>
-                <div style="font-size:.85rem;font-weight:800;color:#1a1a1a;line-height:1.2">{{ $__m->first_name }}</div>
-            </div>
-            <div style="position:relative">
-                <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#4a2619,#7c3d28);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(74,38,25,.3);cursor:pointer"
-                     data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="{{ route('marketer.profile') }}" class="d-flex align-items-center gap-2" style="text-decoration:none">
+                <div style="text-align:left">
+                    <div style="font-size:.72rem;color:#9ca3af;font-weight:600;line-height:1.2">مرحباً</div>
+                    <div style="font-size:.85rem;font-weight:800;color:#1a1a1a;line-height:1.2">{{ $__m->first_name }}</div>
+                </div>
+                <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#4a2619,#7c3d28);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(74,38,25,.3)">
                     {{ $__initials }}
                 </div>
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-1" style="min-width:160px">
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}" class="px-2 py-1">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                <i class="ti ti-logout me-1"></i> تسجيل الخروج
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+            </a>
+            <form method="POST" action="{{ route('logout') }}" class="m-0">
+                @csrf
+                <button type="submit" class="btn btn-sm" title="تسجيل الخروج"
+                        style="width:38px;height:38px;border-radius:50%;background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca;padding:0;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <i class="ti ti-logout" style="font-size:18px"></i>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -195,10 +191,10 @@
         طلباتي
     </a>
 
-    {{-- معلوماتي --}}
-    <a href="{{ route('marketer.profile') }}" class="{{ request()->routeIs('marketer.profile*') ? 'active' : '' }}">
-        <i class="ti ti-user-circle"></i>
-        معلوماتي
+    {{-- محفظتي --}}
+    <a href="{{ route('marketer.wallet') }}" class="{{ request()->routeIs('marketer.wallet*') ? 'active' : '' }}">
+        <i class="ti ti-wallet"></i>
+        محفظتي
     </a>
 
 </nav>
