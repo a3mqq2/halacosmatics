@@ -187,7 +187,7 @@
         <div class="wallet-balance {{ $stats['balance'] < 0 ? 'negative' : '' }}">
             {{ number_format($stats['balance'], 2) }}
             <small>د.ل</small>
-        </div>
+        </div>ث
     </div>
 </div>
 
