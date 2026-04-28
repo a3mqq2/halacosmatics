@@ -62,6 +62,8 @@ Route::middleware('auth')->group(function () {
         Route::post('orders/{order}/accept-return', [OrderController::class, 'acceptReturn'])->name('orders.accept-return');
     });
 
+    Route::post('orders/{order}/revert-delivery', [OrderController::class, 'revertDelivery'])->name('orders.revert-delivery');
+
     Route::middleware('permission:agents')->group(function () {
         Route::resource('agents', AgentController::class);
         Route::patch('agents/{agent}/toggle',      [AgentController::class, 'toggle'])->name('agents.toggle');

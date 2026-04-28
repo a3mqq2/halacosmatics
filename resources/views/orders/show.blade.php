@@ -70,6 +70,20 @@
                 <i class="ti ti-x me-1"></i> تعذر التسليم
             </button>
         @endif
+
+        @if(in_array($order->status, ['delivered', 'returning', 'returned']) && Auth::user()->is_super)
+            <button type="button" class="btn btn-outline-warning btn-sm"
+                    data-bs-toggle="modal" data-bs-target="#revertDeliveryModal">
+                <i class="ti ti-arrow-back-up me-1"></i>
+                @if($order->status === 'delivered')
+                    تراجع عن التسليم
+                @elseif($order->status === 'returning')
+                    تراجع — إرجاع لقيد التوصيل
+                @else
+                    تراجع — إرجاع لقيد التوصيل
+                @endif
+            </button>
+        @endif
     </div>
 </div>
 
@@ -781,6 +795,51 @@
 </div>
 @endif
 
+{{-- Revert Delivery Modal --}}
+@if(in_array($order->status, ['delivered', 'returning', 'returned']) && Auth::user()->is_super)
+<div class="modal fade" id="revertDeliveryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('orders.revert-delivery', $order) }}">
+                @csrf
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-warning">
+                        <i class="ti ti-arrow-back-up me-1"></i> تراجع وإرجاع الطلب #{{ $order->id }} لقيد التوصيل
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning rounded-3 small mb-3">
+                        <i class="ti ti-alert-triangle me-1"></i>
+                        سيتم إرجاع حالة الطلب إلى <strong>قيد التوصيل</strong>،
+                        @if($order->status === 'delivered')
+                            وعكس أي عمليات مالية تمت عند التسليم.
+                        @elseif($order->status === 'returned')
+                            وعكس عمليات الاسترداد (الكميات للمخزون، استرداد التكلفة، عمولة الاسترداد).
+                        @else
+                            وإلغاء سبب تعذر التسليم.
+                        @endif
+                        سيُسجَّل في سجل الطلب أن العملية تمت بواسطة <strong>تعديل إداري</strong>.
+                    </div>
+                    <label class="form-label fw-semibold">سبب التراجع <span class="text-danger">*</span></label>
+                    <textarea name="revert_reason" class="form-control @error('revert_reason') is-invalid @enderror"
+                              rows="4" placeholder="اكتب سبب التراجع بوضوح..." required>{{ old('revert_reason') }}</textarea>
+                    @error('revert_reason')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">رجوع</button>
+                    <button type="submit" class="btn btn-warning text-white">
+                        <i class="ti ti-arrow-back-up me-1"></i> تأكيد التراجع
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
 @endsection
 
 @push('styles')
@@ -802,6 +861,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         new bootstrap.Modal(document.getElementById('cancelModal')).show();
+    });
+</script>
+@endif
+@if($errors->has('revert_reason'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new bootstrap.Modal(document.getElementById('revertDeliveryModal')).show();
     });
 </script>
 @endif

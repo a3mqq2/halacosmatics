@@ -241,6 +241,111 @@ class OrderService
         });
     }
 
+    public function revertDelivery(Order $order, string $reason): void
+    {
+        DB::transaction(function () use ($order, $reason) {
+            $order->load('items.product');
+
+            $admin           = Auth::guard('web')->user();
+            $adminId         = $admin->id;
+            $isBankTransfer  = $order->payment_method === 'bank_transfer';
+            $previousStatus  = $order->status;
+            $newStatus       = ($order->agent_id || $order->mosafir_parcel_id) ? 'with_agent' : 'processing';
+            $today           = now()->toDateString();
+
+            $order->update(['status' => $newStatus, 'delivery_failure_reason' => null]);
+
+            if ($previousStatus === 'delivered' && ! $isBankTransfer && ! $order->agent_id) {
+                $marketer        = $order->marketer;
+                $marketerAmount  = (float) $order->products_total;
+                $marketerBalance = (float) $marketer->balance - $marketerAmount;
+
+                $marketer->update(['balance' => $marketerBalance]);
+
+                MarketerTransaction::create([
+                    'marketer_id'    => $marketer->id,
+                    'user_id'        => $adminId,
+                    'type'           => 'withdrawal',
+                    'recipient_name' => trim($marketer->first_name . ' ' . $marketer->last_name),
+                    'description'    => "تراجع عن تسليم طلب #{$order->id} — تعديل إداري — السبب: {$reason}",
+                    'amount'         => $marketerAmount,
+                    'date'           => $today,
+                    'balance_after'  => $marketerBalance,
+                ]);
+            }
+
+            if ($previousStatus === 'returned') {
+                foreach ($order->items as $item) {
+                    $product = $item->product;
+                    if (! $product) {
+                        continue;
+                    }
+                    $quantityAfter = max(0, $product->quantity - $item->quantity);
+                    $product->update(['quantity' => $quantityAfter]);
+
+                    ProductQuantityLog::create([
+                        'product_id'     => $product->id,
+                        'user_id'        => $adminId,
+                        'type'           => 'subtract',
+                        'quantity'       => $item->quantity,
+                        'quantity_after' => $quantityAfter,
+                        'notes'          => "تراجع عن استرداد طلب #{$order->id} — تعديل إداري",
+                    ]);
+                }
+
+                $marketer  = $order->marketer;
+                $costTotal = $order->items->sum(
+                    fn($i) => $i->quantity * ((float) $i->product_cost ?: (float) ($i->product?->price ?? 0))
+                );
+
+                if ($costTotal > 0) {
+                    $balanceAfter = (float) $marketer->balance - $costTotal;
+                    $marketer->update(['balance' => $balanceAfter]);
+
+                    MarketerTransaction::create([
+                        'marketer_id'    => $marketer->id,
+                        'user_id'        => $adminId,
+                        'type'           => 'withdrawal',
+                        'recipient_name' => trim($marketer->first_name . ' ' . $marketer->last_name),
+                        'description'    => "تراجع — عكس استرداد تكلفة منتجات طلب #{$order->id}",
+                        'amount'         => $costTotal,
+                        'date'           => $today,
+                        'balance_after'  => $balanceAfter,
+                    ]);
+
+                    $marketer->refresh();
+                }
+
+                $returnFee    = 15.0;
+                $balanceAfter = (float) $marketer->balance + $returnFee;
+                $marketer->update(['balance' => $balanceAfter]);
+
+                MarketerTransaction::create([
+                    'marketer_id'    => $marketer->id,
+                    'user_id'        => $adminId,
+                    'type'           => 'deposit',
+                    'recipient_name' => trim($marketer->first_name . ' ' . $marketer->last_name),
+                    'description'    => "تراجع — عكس عمولة تجهيز طلب مسترد #{$order->id}",
+                    'amount'         => $returnFee,
+                    'date'           => $today,
+                    'balance_after'  => $balanceAfter,
+                ]);
+            }
+
+            $statusLabels = [
+                'delivered' => 'التسليم',
+                'returning' => 'حالة قيد الاسترداد',
+                'returned'  => 'استرداد الطلب',
+            ];
+            $label = $statusLabels[$previousStatus] ?? $previousStatus;
+
+            $order->logs()->create([
+                'action'      => 'revert_delivery',
+                'description' => "تم بواسطة تعديل إداري — تراجع عن {$label} وإرجاع الطلب لحالة قيد التوصيل بواسطة {$admin->name} — السبب: {$reason}",
+            ]);
+        });
+    }
+
     public function dispatchToAgent(Order $order, Agent $agent): void
     {
         DB::transaction(function () use ($order, $agent) {

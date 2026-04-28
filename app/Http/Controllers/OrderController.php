@@ -8,6 +8,7 @@ use App\Http\Requests\ApproveOrderRequest;
 use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\DeliverOrderRequest;
 use App\Http\Requests\FailDeliveryRequest;
+use App\Http\Requests\RevertDeliveryRequest;
 use App\Models\Agent;
 use App\Models\DeliveryArea;
 use App\Models\Order;
@@ -231,6 +232,21 @@ class OrderController extends Controller
         $service->markFailedDelivery($order, $data);
 
         return back()->with('success', 'تم تسجيل تعذر التسليم وتحديث حالة الطلب إلى قيد الاسترداد.');
+    }
+
+    public function revertDelivery(RevertDeliveryRequest $request, Order $order, OrderService $service)
+    {
+        if (! Auth::guard('web')->user()->is_super) {
+            abort(403);
+        }
+
+        if (! in_array($order->status, ['delivered', 'returning', 'returned'])) {
+            return back()->with('error', 'لا يمكن التراجع — الحالة الحالية للطلب غير مسموح بالتراجع منها.');
+        }
+
+        $service->revertDelivery($order, $request->validated('revert_reason'));
+
+        return back()->with('success', 'تم التراجع وإرجاع الطلب إلى حالة قيد التوصيل.');
     }
 
     public function cancel(CancelOrderRequest $request, Order $order, OrderService $service)
