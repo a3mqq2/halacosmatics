@@ -16,6 +16,53 @@
     @endif
 </div>
 
+@php
+    $agentName  = null;
+    $agentPhone = null;
+    $agentType  = null;
+    if (!empty($mosafirParcel['deliveryman']['phone'] ?? null)) {
+        $agentName  = $mosafirParcel['deliveryman']['name'] ?? 'مندوب المسافر';
+        $agentPhone = $mosafirParcel['deliveryman']['phone'];
+        $agentType  = 'mosafir';
+    } elseif ($order->agent && $order->agent->phone) {
+        $agentName  = $order->agent->name;
+        $agentPhone = $order->agent->phone;
+        $agentType  = 'local';
+    }
+@endphp
+
+@if($agentPhone)
+<div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-4"
+     style="background:linear-gradient(135deg,{{ $agentType === 'mosafir' ? '#f0fdf4 0%, #dcfce7' : '#fef9f5 0%, #fdeee8' }} 100%);
+            border:2px solid {{ $agentType === 'mosafir' ? '#86efac' : '#e8c5b3' }};
+            box-shadow:0 4px 14px {{ $agentType === 'mosafir' ? 'rgba(22,163,74,.12)' : 'rgba(74,38,25,.12)' }}">
+    <div style="width:48px;height:48px;border-radius:50%;
+                background:{{ $agentType === 'mosafir' ? '#16a34a' : '#4a2619' }};
+                display:flex;align-items:center;justify-content:center;flex-shrink:0;
+                box-shadow:0 4px 10px {{ $agentType === 'mosafir' ? 'rgba(22,163,74,.35)' : 'rgba(74,38,25,.35)' }}">
+        <i class="ti ti-motorbike text-white" style="font-size:1.4rem"></i>
+    </div>
+    <div style="flex:1;min-width:0">
+        <div style="font-size:.7rem;font-weight:700;color:{{ $agentType === 'mosafir' ? '#15803d' : '#4a2619' }};letter-spacing:.04em;line-height:1">
+            {{ $agentType === 'mosafir' ? 'مندوب المسافر' : 'مندوب التوصيل' }}
+        </div>
+        <div class="fw-bold mt-1" style="font-size:.95rem;color:#1a1a1a;line-height:1.2">{{ $agentName }}</div>
+        <div dir="ltr" class="fw-bold mt-1"
+             style="font-size:1.05rem;color:{{ $agentType === 'mosafir' ? '#15803d' : '#4a2619' }};letter-spacing:.03em;line-height:1">
+            {{ $agentPhone }}
+        </div>
+    </div>
+    <a href="tel:{{ $agentPhone }}"
+       class="d-inline-flex align-items-center justify-content-center"
+       style="width:46px;height:46px;border-radius:50%;
+              background:{{ $agentType === 'mosafir' ? '#16a34a' : '#4a2619' }};
+              color:#fff;flex-shrink:0;text-decoration:none;
+              box-shadow:0 4px 10px {{ $agentType === 'mosafir' ? 'rgba(22,163,74,.35)' : 'rgba(74,38,25,.35)' }}">
+        <i class="ti ti-phone-call" style="font-size:1.2rem"></i>
+    </a>
+</div>
+@endif
+
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-header p-0 border-bottom">
         <ul class="nav nav-tabs card-header-tabs px-2" role="tablist">

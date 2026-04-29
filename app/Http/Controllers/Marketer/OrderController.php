@@ -40,7 +40,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $order->load(['items.product', 'logs', 'localArea']);
+        $order->load(['items.product', 'logs', 'localArea', 'agent']);
 
         $mosafirParcel = $order->mosafir_parcel_id
             ? $mosafir->showParcel($order->mosafir_parcel_id)
